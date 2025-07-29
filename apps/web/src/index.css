@@ -18,8 +18,13 @@
   }
   
   .song-row {
-    @apply flex items-center p-2 rounded-md hover:bg-spotify-gray-800 transition-colors duration-200 cursor-pointer group;
-  }
+  @apply flex items-center p-2 rounded-md transition-colors duration-200 cursor-pointer;
+}
+
+.song-row:hover {
+  @apply bg-spotify-gray-800;
+}
+
   
   .song-image {
     @apply w-12 h-12 rounded-md object-cover;

@@ -30,7 +30,7 @@ function App() {
     <div className="h-screen bg-spotify-black flex flex-col">
       {/* Header */}
       <header className="bg-spotify-gray-900 p-4 border-b border-spotify-gray-700">
-        <h1 className="text-2xl font-bold text-white">Music Player</h1>
+        <h1 className="text-2xl font-bold text-white">Mua-ZOHAN</h1>
       </header>
 
       {/* Main Content */}
