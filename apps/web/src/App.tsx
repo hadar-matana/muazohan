@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import SongList from './components/songs-list'
 import PlayerBar from './components/player-bar'
-import { Song, PlayerState } from './types'
+import { Song, PlayerState } from './data/types'
 
 function App() {
   const [playerState, setPlayerState] = useState<PlayerState>({
@@ -28,12 +28,10 @@ function App() {
 
   return (
     <div className="h-screen bg-spotify-black flex flex-col">
-      {/* Header */}
       <header className="bg-spotify-gray-900 p-4 border-b border-spotify-gray-700">
         <h1 className="text-2xl font-bold text-white">Mua-ZOHAN</h1>
       </header>
 
-      {/* Main Content */}
       <main className="flex-1 overflow-hidden">
         <SongList 
           onPlaySong={handlePlaySong} 
@@ -42,7 +40,6 @@ function App() {
         />
       </main>
 
-      {/* Player Bar */}
       {playerState.currentSong && (
         <PlayerBar 
           playerState={playerState}

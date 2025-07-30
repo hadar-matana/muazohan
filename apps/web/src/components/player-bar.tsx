@@ -1,9 +1,4 @@
-import { PlayerState } from '../types';
-
-interface PlayerBarProps {
-  playerState: PlayerState;
-  onPlayPause: () => void;
-}
+import { PlayerBarProps } from '../data/types';
 
 export default function PlayerBar({ playerState, onPlayPause }: PlayerBarProps) {
   const { currentSong, isPlaying } = playerState;
@@ -19,7 +14,6 @@ export default function PlayerBar({ playerState, onPlayPause }: PlayerBarProps) 
   return (
     <div className="bg-spotify-gray-800 border-t border-spotify-gray-700 p-4">
       <div className="flex items-center justify-between">
-        {/* Current Song Info */}
         <div className="flex items-center min-w-0 flex-1">
           <img 
             src={currentSong.imageUrl} 
@@ -36,7 +30,6 @@ export default function PlayerBar({ playerState, onPlayPause }: PlayerBarProps) 
           </div>
         </div>
 
-        {/* Player Controls */}
         <div className="flex items-center space-x-6 flex-1 justify-center">
           <button className="text-spotify-gray-300 hover:text-white transition-colors">
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -64,7 +57,6 @@ export default function PlayerBar({ playerState, onPlayPause }: PlayerBarProps) 
           </button>
         </div>
 
-        {/* Progress & Volume */}
         <div className="flex items-center space-x-4 flex-1 justify-end">
           <span className="text-spotify-gray-300 text-xs">
             0:00
@@ -87,7 +79,6 @@ export default function PlayerBar({ playerState, onPlayPause }: PlayerBarProps) 
         </div>
       </div>
 
-      {/* Progress Bar */}
       <div className="mt-3">
         <div className="w-full h-1 bg-spotify-gray-600 rounded-full">
           <div className="h-1 bg-spotify-green rounded-full w-0 transition-all duration-300"></div>

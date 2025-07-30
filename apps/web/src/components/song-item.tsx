@@ -1,5 +1,5 @@
 
-import { Song } from '../types';
+import { Song } from '../data/types';
 
 interface SongItemProps {
   song: Song;
