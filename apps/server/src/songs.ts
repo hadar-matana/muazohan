@@ -1,6 +1,4 @@
-import { Song, Artist, Album } from './types';
-
-const artists: Artist[] = [
+const artists = [
   {
     id: '1',
     name: 'The Beatles',
@@ -29,7 +27,7 @@ const artists: Artist[] = [
 ];
 
 // Mock Albums
-const albums: Album[] = [
+const albums = [
   {
     id: '1',
     name: 'Abbey Road',
@@ -68,7 +66,7 @@ const albums: Album[] = [
 ];
 
 // Mock Songs
-export const mockSongs: Song[] = [
+export const mockSongs = [
   {
     id: '1',
     title: 'Come Together',

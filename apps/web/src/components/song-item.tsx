@@ -1,13 +1,5 @@
 
-import { Song } from '../data/types';
-
-interface SongItemProps {
-  song: Song;
-  index: number;
-  isCurrentSong: boolean;
-  isPlaying: boolean;
-  onPlayPause: () => void;
-}
+import { SongItemProps } from '../data/types';
 
 export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }: SongItemProps) {
   const formatDuration = (seconds: number) => {
@@ -23,7 +15,6 @@ export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }:
       }`}
       onClick={onPlayPause}
     >
-      {/* Track Number / Play Button */}
       <div className="col-span-1 flex items-center justify-center">
         <div className="relative group">
           <span className={`text-sm ${isCurrentSong && isPlaying ? 'text-spotify-green' : 'text-spotify-gray-300'} group-hover:hidden`}>
@@ -43,7 +34,6 @@ export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }:
         </div>
       </div>
 
-      {/* Song Info */}
       <div className="col-span-5 md:col-span-4 flex items-center min-w-0">
         <img 
           src={song.imageUrl} 
@@ -62,14 +52,12 @@ export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }:
         </div>
       </div>
 
-      {/* Album */}
       <div className="hidden md:block col-span-3">
         <p className="song-album text-spotify-gray-300 text-sm truncate">
           {song.album.name}
         </p>
       </div>
 
-      {/* Duration */}
       <div className="col-span-6 md:col-span-4 text-right">
         <p className="song-duration text-spotify-gray-300 text-sm">
           {formatDuration(song.duration)}

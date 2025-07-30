@@ -1,18 +1,18 @@
 
-import { useState, useEffect } from 'react';
-import { Song, SongListProps } from '../data/types';
-import { mockSongs } from '../data/songs';
+// import { useState } from 'react';
+import { SongListProps } from '../data/types';
 import { SongItem } from './song-item';
+import { trpc } from '../trpc';
 
 
 
 export default function SongList({ onPlaySong, currentSong, isPlaying }: SongListProps) {
-  const [songs, setSongs] = useState<Song[]>([]);
+  // const [songs, setSongs] = useState<Song[]>(mockSongs);
 
-  useEffect(() => {
-    // Simulate loading songs - in this case, we're using mockSongs
-    setSongs(mockSongs);
-  }, []);
+  const { data: songs, isLoading } = trpc.getSongs.useQuery();
+
+  if (isLoading) return <div>טוען...</div>;
+  if (!songs) return <div>לא נמצאו שירים</div>;
 
   return (   
     <div className="p-6 overflow-y-auto h-full">
