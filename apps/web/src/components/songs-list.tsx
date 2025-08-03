@@ -1,13 +1,12 @@
 
-// import { useState } from 'react';
-import { SongListProps } from '../data/types';
 import { SongItem } from './song-item';
 import { trpc } from '../trpc';
+import { usePlayer } from '../context/PlayerContext';
 
 
+export default function SongList() {
+  const { playSong, currentSong, isPlaying } = usePlayer();
 
-export default function SongList({ onPlaySong, currentSong, isPlaying }: SongListProps) {
-  // const [songs, setSongs] = useState<Song[]>(mockSongs);
 
   const { data: songs, isLoading } = trpc.getSongs.useQuery();
 
@@ -32,7 +31,7 @@ export default function SongList({ onPlaySong, currentSong, isPlaying }: SongLis
             index={index + 1}
             isCurrentSong={currentSong?.id === song.id}
             isPlaying={isPlaying && currentSong?.id === song.id}
-            onPlayPause={() => onPlaySong(song)}
+            onPlayPause={() => playSong(song)}
           />
         ))}
       </div>

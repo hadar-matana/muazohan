@@ -6,11 +6,10 @@ import express from 'express';
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:5174', // או '*' לפיתוח
+  origin: 'http://localhost:5173', // או '*' לפיתוח
   credentials: true,
 }));
 
-// התחברות ל־tRPC
 import { createExpressMiddleware } from '@trpc/server/adapters/express';
 
 app.use(

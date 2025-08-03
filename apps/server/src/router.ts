@@ -7,6 +7,7 @@ const t = initTRPC.create();
 
 export const appRouter = t.router({
   getSongs: t.procedure.query(() => {
+    console.log('getSongs')
     return mockSongs;
   }),
 });

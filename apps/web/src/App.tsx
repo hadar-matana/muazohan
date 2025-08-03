@@ -1,30 +1,9 @@
-import { useState } from 'react'
 import SongList from './components/songs-list'
 import PlayerBar from './components/player-bar'
-import { Song, PlayerState } from './data/types'
+import { PlayerProvider, usePlayer } from './context/PlayerContext';
 
-function App() {
-  const [playerState, setPlayerState] = useState<PlayerState>({
-    currentSong: null,
-    isPlaying: false,
-    currentTime: 0,
-    volume: 1,
-  });
-
-  const handlePlaySong = (song: Song) => {
-    setPlayerState(prev => ({
-      ...prev,
-      currentSong: song,
-      isPlaying: true,
-    }));
-  };
-
-  const handlePlayPause = () => {
-    setPlayerState(prev => ({
-      ...prev,
-      isPlaying: !prev.isPlaying,
-    }));
-  };
+function AppContent() {
+  const { currentSong } = usePlayer();
 
   return (
     <div className="h-screen bg-spotify-black flex flex-col">
@@ -33,21 +12,22 @@ function App() {
       </header>
 
       <main className="flex-1 overflow-hidden">
-        <SongList 
-          onPlaySong={handlePlaySong} 
-          currentSong={playerState.currentSong}
-          isPlaying={playerState.isPlaying}
-        />
+        <SongList />
       </main>
 
-      {playerState.currentSong && (
-        <PlayerBar 
-          playerState={playerState}
-          onPlayPause={handlePlayPause}
-        />
+      {currentSong && (
+        <PlayerBar/>
       )}
     </div>
-  )
+  );
+}
+
+function App() {
+  return (
+    <PlayerProvider>
+      <AppContent />
+    </PlayerProvider>
+  );
 }
 
 export default App

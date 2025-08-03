@@ -1,7 +1,8 @@
-import { PlayerBarProps } from '../data/types';
+import { usePlayer } from '../context/PlayerContext';
 
-export default function PlayerBar({ playerState, onPlayPause }: PlayerBarProps) {
-  const { currentSong, isPlaying } = playerState;
+
+export default function PlayerBar() {
+  const { currentSong, isPlaying, play, pause } = usePlayer();
 
   if (!currentSong) return null;
 
@@ -38,7 +39,7 @@ export default function PlayerBar({ playerState, onPlayPause }: PlayerBarProps) 
           </button>
 
           <button 
-            onClick={onPlayPause}
+            onClick={isPlaying ? pause : play}
             className="play-button w-10 h-10 bg-white text-black hover:scale-105"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
