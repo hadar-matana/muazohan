@@ -26,7 +26,7 @@ export default function PlayerBar() {
               {currentSong.title}
             </h4>
             <p className="text-spotify-gray-300 text-xs truncate">
-              {currentSong.artist.name}
+              {typeof currentSong.artist === 'string' ? currentSong.artist : currentSong.artist.name}
             </p>
           </div>
         </div>

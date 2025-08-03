@@ -10,9 +10,8 @@ export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }:
 
   return (
     <div 
-      className={`song-row grid grid-cols-12 gap-4 items-center px-4 py-2 rounded-md transition-colors duration-200 cursor-pointer hover:bg-spotify-gray-800 ${
-        isCurrentSong ? 'bg-spotify-gray-700' : ''
-      }`}
+      className="song-row grid grid-cols-12 gap-4 items-center px-4 py-2 rounded-md cursor-pointer hover:bg-spotify-gray-800"
+      style={{ backgroundColor: isCurrentSong ? '#374151' : 'transparent' }}
       onClick={onPlayPause}
     >
       <div className="col-span-1 flex items-center justify-center">
@@ -40,21 +39,21 @@ export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }:
           alt={`${song.title} cover`} 
           className="song-image w-10 h-10 mr-3"
         />
-        <div className="song-info flex flex-col min-w-0">
-          <h3 className={`song-title font-medium text-sm truncate ${
-            isCurrentSong ? 'text-spotify-green' : 'text-white'
-          }`}>
-            {song.title}
-          </h3>
-          <p className="song-artist text-spotify-gray-300 text-sm truncate">
-            {song.artist.name}
-          </p>
-        </div>
+                 <div className="song-info flex flex-col min-w-0 gap-1">
+           <h3 className={`song-title font-semibold text-sm truncate ${
+             isCurrentSong ? 'text-spotify-green' : 'text-white'
+           }`}>
+             {song.title}
+           </h3>
+           <p className="song-artist text-spotify-gray-300 text-xs truncate">
+             {typeof song.artist === 'string' ? song.artist : song.artist.name}
+           </p>
+         </div>
       </div>
 
       <div className="hidden md:block col-span-3">
         <p className="song-album text-spotify-gray-300 text-sm truncate">
-          {song.album.name}
+          {typeof song.album === 'string' ? song.album : song.album.name}
         </p>
       </div>
 

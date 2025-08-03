@@ -24,7 +24,7 @@ export default function SongList() {
       </div>
 
       <div className="space-y-1">
-        {songs.map((song, index) => (
+        {songs.map((song: any, index: number) => (
           <SongItem
             key={song.id}
             song={song}

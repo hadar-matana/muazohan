@@ -18,7 +18,7 @@
   }
   
   .song-row {
-  @apply flex items-center p-2 rounded-md transition-colors duration-200 cursor-pointer;
+  @apply flex items-center p-2 rounded-md cursor-pointer;
 }
 
 .song-row:hover {
