@@ -1,20 +1,21 @@
-import { createHTTPServer } from '@trpc/server/adapters/standalone';
 import { appRouter } from './router';
 import cors from 'cors';
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+import uploadRouter from './routes/upload';
+import dotenv from 'dotenv';
+import { createExpressMiddleware } from '@trpc/server/adapters/express';
 
-const prisma = new PrismaClient();
-
+dotenv.config();
 
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:5173', // או '*' לפיתוח
+  origin: 'http://localhost:5173', 
   credentials: true,
 }));
 
-import { createExpressMiddleware } from '@trpc/server/adapters/express';
+app.use('/upload', uploadRouter); 
+
 
 app.use(
   '/',

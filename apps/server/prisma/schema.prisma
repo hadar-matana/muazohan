@@ -21,4 +21,5 @@ model Songs {
   album    String
   duration Int
   imageUrl String
+  mp3Url   String?
 }

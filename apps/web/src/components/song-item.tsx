@@ -8,6 +8,7 @@ export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }:
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
+  
   return (
     <div 
       className="song-row grid grid-cols-12 gap-4 items-center px-4 py-2 rounded-md cursor-pointer hover:bg-spotify-gray-800"
@@ -46,14 +47,14 @@ export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }:
              {song.title}
            </h3>
            <p className="song-artist text-spotify-gray-300 text-xs truncate">
-             {typeof song.artist === 'string' ? song.artist : song.artist.name}
+             {song.artist}
            </p>
          </div>
       </div>
 
       <div className="hidden md:block col-span-3">
         <p className="song-album text-spotify-gray-300 text-sm truncate">
-          {typeof song.album === 'string' ? song.album : song.album.name}
+          {song.album}
         </p>
       </div>
 

@@ -15,10 +15,11 @@ export interface Album {
 export interface Song {
   id: string;
   title: string;
-  artist: Artist;
-  album: Album;
+  artist: string;
+  album: string;
   duration: number; // in seconds
   imageUrl: string;
+  mp3Url?: string | null
 }
 
 export interface PlayerState {
@@ -45,4 +46,12 @@ export interface SongListProps {
   onPlaySong: (song: Song) => void;
   currentSong: Song | null;
   isPlaying: boolean;
+}
+
+export interface PlayerContextType  {
+  currentSong: Song | null;
+  isPlaying: boolean;
+  playSong: (song: Song) => void;
+  play: () => void;
+  pause: () => void;
 }

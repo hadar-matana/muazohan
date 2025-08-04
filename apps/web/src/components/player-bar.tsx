@@ -1,4 +1,4 @@
-import { usePlayer } from '../context/PlayerContext';
+import { usePlayer } from '../context/usePlayer';
 
 
 export default function PlayerBar() {
@@ -26,7 +26,7 @@ export default function PlayerBar() {
               {currentSong.title}
             </h4>
             <p className="text-spotify-gray-300 text-xs truncate">
-              {typeof currentSong.artist === 'string' ? currentSong.artist : currentSong.artist.name}
+              {currentSong.artist}
             </p>
           </div>
         </div>

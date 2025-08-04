@@ -9,6 +9,6 @@
       "@repo/ui": ["../../packages/ui/src"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "../server/src/routes"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

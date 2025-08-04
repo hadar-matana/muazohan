@@ -1,12 +1,12 @@
 
 import { SongItem } from './song-item';
 import { trpc } from '../trpc';
-import { usePlayer } from '../context/PlayerContext';
+import { usePlayer } from '../context/usePlayer';
+import type { Song } from '../data/types';
 
 
 export default function SongList() {
   const { playSong, currentSong, isPlaying } = usePlayer();
-
 
   const { data: songs, isLoading } = trpc.getSongs.useQuery();
 
@@ -24,7 +24,7 @@ export default function SongList() {
       </div>
 
       <div className="space-y-1">
-        {songs.map((song: any, index: number) => (
+        {songs.map((song: Song, index: number) => (
           <SongItem
             key={song.id}
             song={song}
