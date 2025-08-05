@@ -1,9 +1,5 @@
-import type { AudioProvider } from '../data/types';
-
-export class HTML5AudioProvider implements AudioProvider {
+export class AudioPlayer {
   private audio: HTMLAudioElement;
-  private onEndedCallback?: () => void;
-  private onErrorCallback?: (error: Error) => void;
   private onTimeUpdateCallback?: (currentTime: number) => void;
 
   constructor() {
@@ -12,23 +8,10 @@ export class HTML5AudioProvider implements AudioProvider {
   }
 
   private setupEventListeners(): void {
-    this.audio.addEventListener('ended', () => {
-      this.onEndedCallback?.();
-    });
-
-    this.audio.addEventListener('error', () => {
-      if (this.audio.error && this.audio.src && this.audio.src !== '') {
-        const error = new Error(`Audio playback error: ${this.audio.error?.message || 'Unknown error'}`);
-        this.onErrorCallback?.(error);
-      }
-    });
-
     this.audio.addEventListener('timeupdate', () => {
       this.onTimeUpdateCallback?.(this.audio.currentTime);
     });
 
-    this.audio.addEventListener('loadstart', () => {
-    });
   }
 
   async play(url: string): Promise<void> {
@@ -45,29 +28,6 @@ export class HTML5AudioProvider implements AudioProvider {
 
       this.audio.src = url;
       this.audio.load();
-      
-      await new Promise<void>((resolve, reject) => {
-        const onCanPlay = () => {
-          this.audio.removeEventListener('canplay', onCanPlay);
-          this.audio.removeEventListener('error', onError);
-          resolve();
-        };
-        
-        const onError = () => {
-          this.audio.removeEventListener('canplay', onCanPlay);
-          this.audio.removeEventListener('error', onError);
-          reject(new Error('Audio failed to load'));
-        };
-        
-        this.audio.addEventListener('canplay', onCanPlay);
-        this.audio.addEventListener('error', onError);
-        
-        setTimeout(() => {
-          this.audio.removeEventListener('canplay', onCanPlay);
-          this.audio.removeEventListener('error', onError);
-          reject(new Error('Audio load timeout'));
-        }, 10000); 
-      });
       
       await this.audio.play();
     } catch (error) {
@@ -104,14 +64,6 @@ export class HTML5AudioProvider implements AudioProvider {
 
   isPlaying(): boolean {
     return !this.audio.paused && !this.audio.ended && this.audio.currentTime > 0;
-  }
-
-  onEnded(callback: () => void): void {
-    this.onEndedCallback = callback;
-  }
-
-  onError(callback: (error: Error) => void): void {
-    this.onErrorCallback = callback;
   }
 
   onTimeUpdate(callback: (currentTime: number) => void): void {

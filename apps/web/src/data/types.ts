@@ -23,21 +23,7 @@ export interface Song {
   mp3Url?: string | null;
 }
 
-// Audio playback abstractions (DIP)
-export interface AudioProvider {
-  play(url: string): Promise<void>;
-  pause(): void;
-  resume(): void;
-  stop(): void;
-  setVolume(volume: number): void;
-  getCurrentTime(): number;
-  getDuration(): number;
-  isPlaying(): boolean;
-  onEnded(callback: () => void): void;
-  onError(callback: (error: Error) => void): void;
-  onTimeUpdate(callback: (currentTime: number) => void): void;
-  destroy(): void;
-}
+
 
 // Player state management (SRP)
 export interface PlayerState {
@@ -53,6 +39,7 @@ export interface PlayerActions {
   playSong(song: Song): void;
   play(): void;
   pause(): void;
+  togglePlayPause(): void;
   stop(): void;
   setVolume(volume: number): void;
   seekTo(time: number): void;
@@ -79,8 +66,7 @@ export interface PlayableItemProps {
 
 export interface PlayerControlsProps {
   isPlaying: boolean;
-  onPlay: () => void;
-  onPause: () => void;
+  onPlayPause: () => void;
   onStop: () => void;
   canPlay: boolean;
 }
@@ -96,7 +82,6 @@ export interface VolumeControlProps {
   onVolumeChange: (volume: number) => void;
 }
 
-// Legacy interfaces for backward compatibility
 export interface PlayerBarProps {
   playerState: PlayerState;
   onPlayPause: () => void;

@@ -7,7 +7,6 @@ export interface Config {
   corsOrigin: string;
   databaseUrl: string;
   nodeEnv: string;
-  logLevel: string;
 }
 
 export const config: Config = {
@@ -15,7 +14,6 @@ export const config: Config = {
   corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:5173',
   databaseUrl: process.env.DATABASE_URL || '',
   nodeEnv: process.env.NODE_ENV || 'development',
-  logLevel: process.env.LOG_LEVEL || 'info',
 };
 
 export function validateConfig(): void {

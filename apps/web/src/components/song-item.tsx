@@ -1,5 +1,6 @@
 
 import { SongItemProps } from '../data/types';
+import { Play, Pause, AlertTriangle } from 'lucide-react';
 
 const formatDuration = (seconds: number): string => {
   const minutes = Math.floor(seconds / 60);
@@ -24,22 +25,18 @@ export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }:
                 {isCurrentSong && isPlaying ? '♪' : index}
               </span>
               <div className="hidden group-hover:flex items-center justify-center">
-                <div className="play-button w-8 h-8">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    {isCurrentSong && isPlaying ? (
-                      <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
-                    ) : (
-                      <path d="M8 5v14l11-7z" />
-                    )}
-                  </svg>
+                <div className="play-button w-8 h-8 flex items-center justify-center">
+                  {isCurrentSong && isPlaying ? (
+                    <Pause className="w-5 h-5" />
+                  ) : (
+                    <Play className="w-5 h-5" />
+                  )}
                 </div>
               </div>
             </>
           ) : (
             <span className="text-sm text-spotify-gray-500">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-              </svg>
+              <AlertTriangle className="w-4 h-4" />
             </span>
           )}
         </div>

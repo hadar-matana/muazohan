@@ -23,7 +23,7 @@ router.post('/', upload.single('file'), async (req, res) => {
     Key: `songs/${uuidv4()}_${file.originalname}`,
     Body: file.buffer,
     ContentType: 'audio/mpeg',
-    CacheControl: 'max-age=31536000', // Cache for 1 year
+    CacheControl: 'max-age=31536000', 
   };
 
   try {

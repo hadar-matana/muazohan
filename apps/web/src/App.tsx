@@ -1,7 +1,7 @@
 import SongList from './components/songs-list'
 import PlayerBar from './components/player-bar'
 import { PlayerProvider } from './context/PlayerContext';
-import { usePlayer } from './context/usePlayer';
+import { usePlayer } from './context/PlayerContext';
 
 function AppContent() {
   const { currentSong } = usePlayer();

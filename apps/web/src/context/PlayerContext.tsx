@@ -1,7 +1,6 @@
-import React, { createContext, useState, useEffect, useRef } from 'react';
-import type { PlayerContextType, PlayerState } from '../data/types';
-import { HTML5AudioProvider } from '../services/AudioProvider';
-import { PlayerStateManager } from '../services/PlayerStateManager';
+import React, { createContext, useState, useEffect, useRef, useContext } from 'react';
+import type { PlayerContextType, PlayerState, Song } from '../data/types';
+import { AudioPlayer } from '../services/AudioProvider';
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
 
@@ -14,55 +13,103 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     volume: 1,
   });
 
-  const audioProviderRef = useRef<HTML5AudioProvider>();
-  const stateManagerRef = useRef<PlayerStateManager>();
+  const audioProviderRef = useRef<AudioPlayer>();
 
   useEffect(() => {
-    // Initialize audio provider and state manager
-    audioProviderRef.current = new HTML5AudioProvider();
-    stateManagerRef.current = new PlayerStateManager(audioProviderRef.current);
+    // Initialize audio provider
+    audioProviderRef.current = new AudioPlayer();
 
-    // Subscribe to state changes
-    const unsubscribe = stateManagerRef.current.subscribe((newState) => {
-      setState(newState);
+    // Set up event listeners
+    // audioProviderRef.current.onEnded(() => {
+    //   setState(prev => ({ ...prev, isPlaying: false }));
+    // });
+
+    // audioProviderRef.current.onError((error) => {
+    //   console.error('Audio error:', error);
+    //   setState(prev => ({ ...prev, isPlaying: false }));
+    // });
+
+    audioProviderRef.current.onTimeUpdate((currentTime) => {
+      setState(prev => ({ ...prev, currentTime }));
     });
 
     return () => {
-      unsubscribe();
-      stateManagerRef.current?.destroy();
+      audioProviderRef.current?.destroy();
     };
   }, []);
 
-  const playSong = async (song: any) => {
+  const playSong = async (song: Song) => {
     try {
-      await stateManagerRef.current?.playSong(song);
+      setState(prev => ({
+        ...prev,
+        currentSong: song,
+        currentTime: 0,
+        duration: song.duration,
+      }));
+
+      if (!song.mp3Url || song.mp3Url.trim() === '') {
+        console.warn(`No mp3Url found for song: "${song.title}" by ${song.artist}`);
+        setState(prev => ({ ...prev, isPlaying: false }));
+        return;
+      }
+
+      setState(prev => ({ ...prev, isPlaying: true }));
+      await audioProviderRef.current?.play(song.mp3Url);
     } catch (error) {
       console.error('Failed to play song:', error);
+      setState(prev => ({ ...prev, isPlaying: false }));
     }
   };
 
   const play = async () => {
+    if (!state.currentSong) return;
+
+    // Check if current song has audio
+    if (!state.currentSong.mp3Url || state.currentSong.mp3Url.trim() === '') {
+      console.warn('Cannot play: No audio URL available for current song');
+      return;
+    }
+
     try {
-      await stateManagerRef.current?.play();
+      audioProviderRef.current?.resume();
+      setState(prev => ({ ...prev, isPlaying: true }));
     } catch (error) {
-      console.error('Failed to play:', error);
+      console.error('Failed to resume playback:', error);
     }
   };
 
   const pause = () => {
-    stateManagerRef.current?.pause();
+    audioProviderRef.current?.pause();
+    setState(prev => ({ ...prev, isPlaying: false }));
+  };
+
+  const togglePlayPause = async () => {
+    if (state.isPlaying) {
+      pause();
+    } else {
+      await play();
+    }
   };
 
   const stop = () => {
-    stateManagerRef.current?.stop();
+    audioProviderRef.current?.stop();
+    setState(prev => ({ 
+      ...prev, 
+      isPlaying: false, 
+      currentTime: 0 
+    }));
   };
 
   const setVolume = (volume: number) => {
-    stateManagerRef.current?.setVolume(volume);
+    const clampedVolume = Math.max(0, Math.min(1, volume));
+    audioProviderRef.current?.setVolume(clampedVolume);
+    setState(prev => ({ ...prev, volume: clampedVolume }));
   };
 
   const seekTo = (time: number) => {
-    stateManagerRef.current?.seekTo(time);
+    // Note: HTML5 Audio API doesn't provide a direct seek method
+    // This would need to be implemented differently or through a custom audio provider
+    console.warn('Seek functionality not implemented in HTML5AudioProvider');
   };
 
   const contextValue: PlayerContextType = {
@@ -70,6 +117,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     playSong,
     play,
     pause,
+    togglePlayPause,
     stop,
     setVolume,
     seekTo,
@@ -83,3 +131,9 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 };
 
 export { PlayerContext };
+
+export const usePlayer = () => {
+  const context = useContext(PlayerContext);
+  if (!context) throw new Error('usePlayer must be used within a PlayerProvider');
+  return context;
+};

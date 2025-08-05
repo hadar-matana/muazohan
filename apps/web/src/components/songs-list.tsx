@@ -1,7 +1,7 @@
 
 import { SongItem } from './song-item';
 import { trpc } from '../trpc';
-import { usePlayer } from '../context/usePlayer';
+import { usePlayer } from '../context/PlayerContext';
 import type { Song } from '../data/types';
 
 

@@ -3,9 +3,7 @@ import type { PlayerControlsProps } from '../../data/types';
 
 export const PlayerControls: React.FC<PlayerControlsProps> = ({
   isPlaying,
-  onPlay,
-  onPause,
-  onStop,
+  onPlayPause,
   canPlay
 }) => {
   return (
@@ -20,7 +18,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
       </button>
 
       <button 
-        onClick={isPlaying ? onPause : onPlay}
+        onClick={onPlayPause}
         className="play-button w-10 h-10 bg-white text-black hover:scale-105 disabled:opacity-50"
         disabled={!canPlay}
       >

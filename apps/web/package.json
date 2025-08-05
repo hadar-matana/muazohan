@@ -10,5 +10,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "check-types": "tsc --noEmit",
     "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "lucide-react": "^0.536.0"
   }
 }
