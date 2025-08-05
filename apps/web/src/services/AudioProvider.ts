@@ -16,8 +16,7 @@ export class HTML5AudioProvider implements AudioProvider {
       this.onEndedCallback?.();
     });
 
-    this.audio.addEventListener('error', (event) => {
-      // Only trigger error callback if there's an actual error and we have a source
+    this.audio.addEventListener('error', () => {
       if (this.audio.error && this.audio.src && this.audio.src !== '') {
         const error = new Error(`Audio playback error: ${this.audio.error?.message || 'Unknown error'}`);
         this.onErrorCallback?.(error);
@@ -67,7 +66,7 @@ export class HTML5AudioProvider implements AudioProvider {
           this.audio.removeEventListener('canplay', onCanPlay);
           this.audio.removeEventListener('error', onError);
           reject(new Error('Audio load timeout'));
-        }, 10000); // 10 second timeout
+        }, 10000); 
       });
       
       await this.audio.play();
