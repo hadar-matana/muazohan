@@ -1,11 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import type { Songs } from '@prisma/client';
 
-export interface ISongService {
-  getAllSongs(): Promise<Songs[]>;
-}
-
-export class SongService implements ISongService {
+export class SongService {
   constructor(private prisma: PrismaClient) {}
 
   async getAllSongs(): Promise<Songs[]> {

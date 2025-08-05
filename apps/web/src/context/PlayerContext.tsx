@@ -16,19 +16,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const audioProviderRef = useRef<AudioPlayer>();
 
   useEffect(() => {
-    // Initialize audio provider
     audioProviderRef.current = new AudioPlayer();
-
-    // Set up event listeners
-    // audioProviderRef.current.onEnded(() => {
-    //   setState(prev => ({ ...prev, isPlaying: false }));
-    // });
-
-    // audioProviderRef.current.onError((error) => {
-    //   console.error('Audio error:', error);
-    //   setState(prev => ({ ...prev, isPlaying: false }));
-    // });
-
     audioProviderRef.current.onTimeUpdate((currentTime) => {
       setState(prev => ({ ...prev, currentTime }));
     });
@@ -64,7 +52,6 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const play = async () => {
     if (!state.currentSong) return;
 
-    // Check if current song has audio
     if (!state.currentSong.mp3Url || state.currentSong.mp3Url.trim() === '') {
       console.warn('Cannot play: No audio URL available for current song');
       return;
@@ -107,9 +94,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const seekTo = (time: number) => {
-    // Note: HTML5 Audio API doesn't provide a direct seek method
-    // This would need to be implemented differently or through a custom audio provider
-    console.warn('Seek functionality not implemented in HTML5AudioProvider');
+    audioProviderRef.current?.seekTo(time);
   };
 
   const contextValue: PlayerContextType = {

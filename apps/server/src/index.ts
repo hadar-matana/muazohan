@@ -5,21 +5,17 @@ import uploadRouter from './routes/upload';
 import { createExpressMiddleware } from '@trpc/server/adapters/express';
 import { config, validateConfig } from './config';
 
-// Validate configuration on startup
 validateConfig();
 
 const app = express();
 
-// CORS configuration
 app.use(cors({
   origin: config.corsOrigin,
   credentials: true,
 }));
 
-// File upload routes
 app.use('/upload', uploadRouter);
 
-// tRPC middleware
 app.use(
   '/',
   createExpressMiddleware({
@@ -28,12 +24,10 @@ app.use(
   })
 );
 
-// Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Error handling middleware
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error('Unhandled error:', err);
   res.status(500).json({ error: 'Internal server error' });
@@ -45,7 +39,6 @@ app.listen(config.port, () => {
   console.log(`🔗 CORS Origin: ${config.corsOrigin}`);
 });
 
-// Graceful shutdown
 process.on('SIGTERM', () => {
   console.log('SIGTERM received, shutting down gracefully');
   process.exit(0);

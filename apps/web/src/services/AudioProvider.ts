@@ -54,6 +54,12 @@ export class AudioPlayer {
     this.audio.volume = Math.max(0, Math.min(1, volume));
   }
 
+  seekTo(time: number): void {
+    if (this.audio.duration && time >= 0 && time <= this.audio.duration) {
+      this.audio.currentTime = time;
+    }
+  }
+
   getCurrentTime(): number {
     return this.audio.currentTime;
   }
