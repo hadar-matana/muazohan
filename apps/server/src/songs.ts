@@ -65,7 +65,7 @@ const albums = [
   }
 ];
 
-// Mock Songs
+// Mock Songs - Note: These are not used by the app, which fetches from database
 export const mockSongs = [
   {
     id: '1',

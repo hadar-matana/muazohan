@@ -1,0 +1,29 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+export interface Config {
+  port: number;
+  corsOrigin: string;
+  databaseUrl: string;
+  nodeEnv: string;
+  logLevel: string;
+}
+
+export const config: Config = {
+  port: parseInt(process.env.PORT || '3001', 10),
+  corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  databaseUrl: process.env.DATABASE_URL || '',
+  nodeEnv: process.env.NODE_ENV || 'development',
+  logLevel: process.env.LOG_LEVEL || 'info',
+};
+
+export function validateConfig(): void {
+  const requiredFields: (keyof Config)[] = ['databaseUrl'];
+  
+  for (const field of requiredFields) {
+    if (!config[field]) {
+      throw new Error(`Missing required configuration: ${field}`);
+    }
+  }
+} 

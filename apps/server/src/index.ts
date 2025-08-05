@@ -2,21 +2,24 @@ import { appRouter } from './router';
 import cors from 'cors';
 import express from 'express';
 import uploadRouter from './routes/upload';
-import dotenv from 'dotenv';
 import { createExpressMiddleware } from '@trpc/server/adapters/express';
+import { config, validateConfig } from './config';
 
-dotenv.config();
+// Validate configuration on startup
+validateConfig();
 
 const app = express();
 
+// CORS configuration
 app.use(cors({
-  origin: 'http://localhost:5173', 
+  origin: config.corsOrigin,
   credentials: true,
 }));
 
-app.use('/upload', uploadRouter); 
+// File upload routes
+app.use('/upload', uploadRouter);
 
-
+// tRPC middleware
 app.use(
   '/',
   createExpressMiddleware({
@@ -25,97 +28,30 @@ app.use(
   })
 );
 
-app.listen(3001, () => {
-  console.log('✅ Server with CORS running at http://localhost:3001');
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Error handling middleware
+app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error('Unhandled error:', err);
+  res.status(500).json({ error: 'Internal server error' });
+});
 
-// async function addSongs() {
-//   // Clear existing songs
-//   await prisma.songs.deleteMany();
-  
-//   // Add all songs to the database
-//   const songsToAdd = [
-//     {
-//       title: 'Come Together',
-//       artist: 'The Beatles',
-//       album: 'Abbey Road',
-//       duration: 259,
-//       imageUrl: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop'
-//     },
-//     {
-//       title: 'Something',
-//       artist: 'The Beatles',
-//       album: 'Abbey Road',
-//       duration: 182,
-//       imageUrl: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop'
-//     },
-//     {
-//       title: 'Bohemian Rhapsody',
-//       artist: 'Queen',
-//       album: 'A Night at the Opera',
-//       duration: 355,
-//       imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop'
-//     },
-//     {
-//       title: 'Love of My Life',
-//       artist: 'Queen',
-//       album: 'A Night at the Opera',
-//       duration: 218,
-//       imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop'
-//     },
-//     {
-//       title: 'Stairway to Heaven',
-//       artist: 'Led Zeppelin',
-//       album: 'Led Zeppelin IV',
-//       duration: 482,
-//       imageUrl: 'https://images.unsplash.com/photo-1511735111819-9a3f7709049c?w=400&h=400&fit=crop'
-//     },
-//     {
-//       title: 'Black Dog',
-//       artist: 'Led Zeppelin',
-//       album: 'Led Zeppelin IV',
-//       duration: 296,
-//       imageUrl: 'https://images.unsplash.com/photo-1511735111819-9a3f7709049c?w=400&h=400&fit=crop'
-//     },
-//     {
-//       title: 'Money',
-//       artist: 'Pink Floyd',
-//       album: 'The Dark Side of the Moon',
-//       duration: 382,
-//       imageUrl: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=400&fit=crop'
-//     },
-//     {
-//       title: 'Time',
-//       artist: 'Pink Floyd',
-//       album: 'The Dark Side of the Moon',
-//       duration: 413,
-//       imageUrl: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&h=400&fit=crop'
-//     },
-//     {
-//       title: 'Get Lucky',
-//       artist: 'Daft Punk',
-//       album: 'Random Access Memories',
-//       duration: 247,
-//       imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop'
-//     },
-//     {
-//       title: 'One More Time',
-//       artist: 'Daft Punk',
-//       album: 'Random Access Memories',
-//       duration: 320,
-//       imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop'
-//     }
-//   ];
+app.listen(config.port, () => {
+  console.log(`✅ Server running at http://localhost:${config.port}`);
+  console.log(`📡 Environment: ${config.nodeEnv}`);
+  console.log(`🔗 CORS Origin: ${config.corsOrigin}`);
+});
 
-//   for (const song of songsToAdd) {
-//     await prisma.songs.create({
-//       data: song,
-//     });
-//   }
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully');
+  process.exit(0);
+});
 
-//   const songs = await prisma.songs.findMany();
-//   console.log('All songs in database:', songs);
-// }
-
-// addSongs();
+process.on('SIGINT', () => {
+  console.log('SIGINT received, shutting down gracefully');
+  process.exit(0);
+});

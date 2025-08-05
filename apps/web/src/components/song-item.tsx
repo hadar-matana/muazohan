@@ -1,36 +1,47 @@
 
 import { SongItemProps } from '../data/types';
 
-export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }: SongItemProps) {
-  const formatDuration = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-  };
+const formatDuration = (seconds: number): string => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+};
 
-  
+export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }: SongItemProps) {
+  const hasAudio = Boolean(song.mp3Url && song.mp3Url.trim() !== '');
+
   return (
     <div 
       className="song-row grid grid-cols-12 gap-4 items-center px-4 py-2 rounded-md cursor-pointer hover:bg-spotify-gray-800"
       style={{ backgroundColor: isCurrentSong ? '#374151' : 'transparent' }}
-      onClick={onPlayPause}
+      onClick={hasAudio ? onPlayPause : undefined}
     >
       <div className="col-span-1 flex items-center justify-center">
         <div className="relative group">
-          <span className={`text-sm ${isCurrentSong && isPlaying ? 'text-spotify-green' : 'text-spotify-gray-300'} group-hover:hidden`}>
-            {isCurrentSong && isPlaying ? '♪' : index}
-          </span>
-          <div className="hidden group-hover:flex items-center justify-center">
-            <div className="play-button w-8 h-8">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                {isCurrentSong && isPlaying ? (
-                  <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
-                ) : (
-                  <path d="M8 5v14l11-7z" />
-                )}
+          {hasAudio ? (
+            <>
+              <span className={`text-sm ${isCurrentSong && isPlaying ? 'text-spotify-green' : 'text-spotify-gray-300'} group-hover:hidden`}>
+                {isCurrentSong && isPlaying ? '♪' : index}
+              </span>
+              <div className="hidden group-hover:flex items-center justify-center">
+                <div className="play-button w-8 h-8">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    {isCurrentSong && isPlaying ? (
+                      <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+                    ) : (
+                      <path d="M8 5v14l11-7z" />
+                    )}
+                  </svg>
+                </div>
+              </div>
+            </>
+          ) : (
+            <span className="text-sm text-spotify-gray-500">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
-            </div>
-          </div>
+            </span>
+          )}
         </div>
       </div>
 
@@ -40,16 +51,21 @@ export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }:
           alt={`${song.title} cover`} 
           className="song-image w-10 h-10 mr-3"
         />
-                 <div className="song-info flex flex-col min-w-0 gap-1">
-           <h3 className={`song-title font-semibold text-sm truncate ${
-             isCurrentSong ? 'text-spotify-green' : 'text-white'
-           }`}>
-             {song.title}
-           </h3>
-           <p className="song-artist text-spotify-gray-300 text-xs truncate">
-             {song.artist}
-           </p>
-         </div>
+        <div className="song-info flex flex-col min-w-0 gap-1">
+          <h3 className={`song-title font-semibold text-sm truncate ${
+            isCurrentSong ? 'text-spotify-green' : 'text-white'
+          }`}>
+            {song.title}
+          </h3>
+          <p className="song-artist text-spotify-gray-300 text-xs truncate">
+            {song.artist}
+            {!hasAudio && (
+              <span className="ml-2 text-spotify-gray-500 text-xs">
+                (No audio)
+              </span>
+            )}
+          </p>
+        </div>
       </div>
 
       <div className="hidden md:block col-span-3">
