@@ -10,7 +10,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
   return (
     <div className="flex items-center space-x-6">
       <button 
-        className="text-spotify-gray-300 hover:text-white transition-colors disabled:opacity-50"
+        className="text-dark-300 hover:text-orange-400 transition-all duration-200 disabled:opacity-50 hover:scale-110 disabled:hover:scale-100"
         disabled={!canPlay}
       >
         <SkipBack className="w-5 h-5" />
@@ -18,7 +18,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
 
       <button 
         onClick={onPlayPause}
-        className="play-button w-10 h-10 bg-white text-black hover:scale-105 disabled:opacity-50"
+        className="play-button w-12 h-12 bg-orange-500 hover:bg-orange-600 text-white hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 shadow-soft hover:shadow-glow"
         disabled={!canPlay}
       >
         {isPlaying ? (
@@ -29,7 +29,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
       </button>
 
       <button 
-        className="text-spotify-gray-300 hover:text-white transition-colors disabled:opacity-50"
+        className="text-dark-300 hover:text-orange-400 transition-all duration-200 disabled:opacity-50 hover:scale-110 disabled:hover:scale-100"
         disabled={!canPlay}
       >
         <SkipForward className="w-5 h-5" />

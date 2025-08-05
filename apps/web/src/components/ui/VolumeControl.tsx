@@ -12,8 +12,8 @@ export const VolumeControl: React.FC<VolumeControlProps> = ({
   };
 
   return (
-    <div className="flex items-center space-x-2">
-      <Volume2 className="w-4 h-4 text-spotify-gray-300" />
+    <div className="flex items-center space-x-3">
+      <Volume2 className="w-4 h-4 text-dark-300 hover:text-orange-400 transition-colors duration-200" />
       <input
         type="range"
         min="0"
@@ -21,9 +21,9 @@ export const VolumeControl: React.FC<VolumeControlProps> = ({
         step="0.01"
         value={volume}
         onChange={handleVolumeChange}
-        className="w-16 h-1 bg-spotify-gray-600 rounded-full appearance-none cursor-pointer"
+        className="w-20 h-1.5 bg-dark-700 rounded-full appearance-none cursor-pointer hover:bg-dark-600 transition-colors duration-200"
         style={{
-          background: `linear-gradient(to right, #1DB954 0%, #1DB954 ${volume * 100}%, #4B5563 ${volume * 100}%, #4B5563 100%)`
+          background: `linear-gradient(to right, #f97316 0%, #f97316 ${volume * 100}%, #475569 ${volume * 100}%, #475569 100%)`
         }}
       />
     </div>

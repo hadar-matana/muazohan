@@ -1,143 +1,100 @@
-# React TypeScript Turborepo
+# Mua-ZOHAN Music Player
 
-A modern monorepo setup with React, TypeScript, Vite, and Turborepo.
+A modern, sleek music player built with React, TypeScript, and tRPC. Features a beautiful dark theme with orange accents, smooth animations, and an intuitive user interface.
 
-## What's inside?
+## 🎨 Design System
 
-This Turborepo includes the following packages/apps:
+### Theme
+- **Dark Mode**: Modern dark theme with gradient backgrounds
+- **Accent Color**: Orange (#f97316) for interactive elements and highlights
+- **Typography**: Inter for body text, Poppins for headings
+- **Animations**: Smooth transitions and subtle hover effects
 
-### Apps
-- `web`: A React TypeScript application built with Vite
+### Key Features
+- **Glass Morphism**: Semi-transparent backgrounds with backdrop blur
+- **Rounded Corners**: Consistent use of rounded-xl and rounded-2xl
+- **Smooth Transitions**: 200ms duration for all interactive elements
+- **Hover Effects**: Scale transforms and color transitions
+- **Custom Scrollbars**: Styled to match the theme
 
-### Packages
-- `@repo/ui`: A shared React component library
-- `@repo/eslint-config`: Shared ESLint configurations
-- `@repo/typescript-config`: Shared TypeScript configurations
+### Color Palette
+- **Dark**: `#0f172a` to `#475569` (9 shades)
+- **Orange**: `#fff7ed` to `#431407` (11 shades)
+- **Text**: White for headings, dark-300/400 for body text
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 - Node.js 18+
-- pnpm 8+ (recommended) or npm
+- pnpm
 
 ### Installation
-
-⚠️ **Important**: Always run commands from the **root directory** of the monorepo, not from individual package directories.
-
-1. Install dependencies from the root directory:
 ```bash
-# From the project root directory
+# Install dependencies
 pnpm install
+
+# Start development servers
+pnpm dev
 ```
 
-2. Build all packages:
+### Development
 ```bash
-pnpm run build
+# Start all apps
+pnpm dev
+
+# Start specific app
+pnpm --filter=web dev
+pnpm --filter=server dev
 ```
 
-3. Start the development server:
-```bash
-pnpm run dev
-```
-
-The web app will be available at `http://localhost:5173`
-
-### If using npm instead of pnpm
-
-If you prefer to use npm:
-
-```bash
-npm install
-npm run build
-npm run dev
-```
-
-## Available Scripts
-
-All commands should be run from the **root directory**:
-
-- `pnpm install` - Install all dependencies
-- `pnpm run build` - Build all packages and apps
-- `pnpm run dev` - Start development servers
-- `pnpm run lint` - Lint all packages and apps
-- `pnpm run format` - Format code with Prettier
-- `pnpm run check-types` - Run TypeScript type checking
-- `pnpm run clean` - Clean all build outputs
-
-## Project Structure
+## 🏗️ Project Structure
 
 ```
+muazohan2/
 ├── apps/
-│   └── web/                 # Vite React app
+│   ├── web/          # React frontend
+│   └── server/       # tRPC backend
 ├── packages/
-│   ├── ui/                  # Shared React components
-│   ├── eslint-config/       # Shared ESLint configs
-│   └── typescript-config/   # Shared TypeScript configs
-├── package.json
-├── pnpm-workspace.yaml      # pnpm workspace configuration
-├── turbo.json
-└── README.md
+│   ├── ui/           # Shared UI components
+│   ├── eslint-config/
+│   └── typescript-config/
 ```
 
-## Key Features
+## 🎵 Features
 
-- **Turborepo** for efficient monorepo management
-- **Vite** for fast development and building
-- **React 18** with TypeScript
-- **pnpm workspaces** for efficient dependency management
-- **Shared configurations** for consistent code quality
-- **Hot Module Replacement** for fast development
-- **Optimized builds** with code splitting
+- **Music Playback**: Full audio player with play/pause, seek, and volume control
+- **Song Library**: Browse and search through your music collection
+- **Modern UI**: Smooth animations and responsive design
+- **Dark Theme**: Easy on the eyes with orange accents
+- **Real-time Updates**: Live progress tracking and state management
 
-## Common Issues & Solutions
+## 🛠️ Tech Stack
 
-### Error: `@repo/ui is not in the npm registry`
+- **Frontend**: React, TypeScript, Tailwind CSS
+- **Backend**: tRPC, Prisma, Node.js
+- **Styling**: Custom design system with glass morphism
+- **State Management**: React Context for player state
+- **Build Tool**: Vite
 
-This error occurs when you try to install dependencies from inside a package directory (like `apps/web/`) instead of the root.
+## 🎨 Styling Guidelines
 
-**Solution**: Always run `pnpm install` (or `npm install`) from the **root directory** of the monorepo.
+### Components
+- Use `.card` class for container elements
+- Use `.btn`, `.btn-primary`, `.btn-secondary` for buttons
+- Use `.glass` for glass morphism effects
+- Use `.gradient-text` for accent text
 
-```bash
-# ❌ Wrong - don't do this
-cd apps/web
-pnpm install
+### Colors
+- Primary: `orange-500` (#f97316)
+- Background: `dark-950` (#0f172a)
+- Text: `white` for headings, `dark-300` for body
+- Borders: `dark-700/50` for subtle separators
 
-# ✅ Correct - do this instead
-# From the project root
-pnpm install
-```
+### Animations
+- Hover: `hover:scale-[1.01]` for subtle lift
+- Transitions: `transition-all duration-200`
+- Loading: `animate-pulse-gentle` for smooth pulses
 
-### Switching between npm and pnpm
+## 📝 License
 
-If you want to switch package managers:
-
-1. Delete `node_modules` and lock files:
-```bash
-rm -rf node_modules
-rm -f package-lock.json pnpm-lock.yaml
-```
-
-2. Install with your preferred package manager:
-```bash
-# For pnpm
-pnpm install
-
-# For npm
-npm install
-```
-
-## Adding New Packages
-
-To add a new package:
-
-1. Create a new directory in `packages/` or `apps/`
-2. Add a `package.json` with appropriate scripts
-3. Install dependencies from the root: `pnpm install`
-4. Configure TypeScript and ESLint using shared configs
-
-## Learn More
-
-- [Turborepo Documentation](https://turbo.build/repo/docs)
-- [pnpm Workspaces](https://pnpm.io/workspaces)
-- [Vite Documentation](https://vitejs.dev/)
-- [React Documentation](https://react.dev/)
+MIT License - feel free to use this project for your own music player!

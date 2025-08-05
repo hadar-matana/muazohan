@@ -18,11 +18,11 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 
   return (
     <div 
-      className="w-full h-1 bg-spotify-gray-600 rounded-full cursor-pointer"
+      className="w-full h-2 bg-dark-700 rounded-full cursor-pointer hover:bg-dark-600 transition-colors duration-200 group"
       onClick={handleClick}
     >
       <div 
-        className="h-1 bg-spotify-green rounded-full transition-all duration-300"
+        className="h-2 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full transition-all duration-300 shadow-sm group-hover:shadow-glow"
         style={{ width: `${progress}%` }}
       />
     </div>

@@ -1,52 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  * {
+    @apply border-dark-700/50;
+  }
+  
   body {
-    @apply bg-spotify-black text-white font-sans;
+    @apply bg-dark-950 text-white font-sans antialiased;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    min-height: 100vh;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-dark-800;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-dark-600 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-dark-500;
+  }
+
+  /* Selection styling */
+  ::selection {
+    @apply bg-orange-500/20 text-orange-100;
   }
 }
 
 @layer components {
+  /* Modern button styles */
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-xl font-medium transition-all duration-200 ease-out;
+  }
+
+  .btn-primary {
+    @apply bg-orange-500 hover:bg-orange-600 text-white shadow-soft hover:shadow-glow active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply bg-dark-700 hover:bg-dark-600 text-white border border-dark-600 hover:border-dark-500 shadow-soft;
+  }
+
+  .btn-ghost {
+    @apply text-dark-300 hover:text-white hover:bg-dark-800/50;
+  }
+
+  /* Card styles */
+  .card {
+    @apply bg-dark-800/50 backdrop-blur-sm border border-dark-700/50 rounded-2xl shadow-soft hover:shadow-soft-lg transition-all duration-300;
+  }
+
+  .card-hover {
+    @apply hover:bg-dark-700/70 hover:border-dark-600/50 hover:scale-[1.02];
+  }
+
+  /* Play button with modern styling */
   .play-button {
-    @apply flex items-center justify-center w-12 h-12 bg-spotify-green rounded-full hover:scale-105 transition-transform duration-200 cursor-pointer;
+    @apply flex items-center justify-center w-12 h-12 bg-orange-500 hover:bg-orange-600 rounded-2xl hover:scale-105 transition-all duration-200 cursor-pointer shadow-soft hover:shadow-glow;
   }
   
   .play-button svg {
-    @apply w-6 h-6 text-black;
+    @apply w-6 h-6 text-white;
   }
-  
+
+  /* Modern song row styling */
   .song-row {
-  @apply flex items-center p-2 rounded-md cursor-pointer;
-}
+    @apply flex items-center p-4 rounded-2xl cursor-pointer transition-all duration-200 ease-out hover:bg-dark-700/50 hover:scale-[1.01];
+  }
 
-.song-row:hover {
-  @apply bg-spotify-gray-800;
-}
+  .song-row:hover {
+    @apply bg-dark-700/50;
+  }
 
-  
+  /* Song image with modern styling */
   .song-image {
-    @apply w-12 h-12 rounded-md object-cover;
+    @apply w-12 h-12 rounded-xl object-cover shadow-soft;
   }
   
+  /* Song info with improved typography */
   .song-info {
     @apply flex-1 min-w-0 px-4;
   }
   
   .song-title {
-    @apply text-white font-medium text-sm truncate;
+    @apply text-white font-medium text-sm truncate group-hover:text-orange-100 transition-colors duration-200;
   }
   
   .song-artist {
-    @apply text-spotify-gray-300 text-sm truncate;
+    @apply text-dark-300 text-sm truncate group-hover:text-dark-200 transition-colors duration-200;
   }
   
   .song-album {
-    @apply hidden md:block text-spotify-gray-300 text-sm truncate;
+    @apply hidden md:block text-dark-400 text-sm truncate group-hover:text-dark-300 transition-colors duration-200;
   }
   
   .song-duration {
-    @apply text-spotify-gray-300 text-sm;
+    @apply text-dark-400 text-sm font-mono;
+  }
+
+  /* Modern input styles */
+  .input {
+    @apply bg-dark-800 border border-dark-600 rounded-xl px-4 py-3 text-white placeholder-dark-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all duration-200;
+  }
+
+  /* Modern progress bar */
+  .progress-bar {
+    @apply bg-dark-700 rounded-full overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply bg-gradient-to-r from-orange-500 to-orange-600 h-full rounded-full transition-all duration-200;
+  }
+
+  /* Glass morphism effect */
+  .glass {
+    @apply bg-dark-800/30 backdrop-blur-md border border-dark-700/50;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent;
+  }
+
+  /* Floating animation */
+  .float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* Pulse glow effect */
+  .pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes pulseGlow {
+    from { box-shadow: 0 0 20px rgba(249, 115, 22, 0.3); }
+    to { box-shadow: 0 0 30px rgba(249, 115, 22, 0.6); }
   }
 }

@@ -60,14 +60,6 @@ export class AudioPlayer {
     }
   }
 
-  getCurrentTime(): number {
-    return this.audio.currentTime;
-  }
-
-  getDuration(): number {
-    return this.audio.duration || 0;
-  }
-
   isPlaying(): boolean {
     return !this.audio.paused && !this.audio.ended && this.audio.currentTime > 0;
   }
