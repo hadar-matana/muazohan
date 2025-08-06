@@ -7,13 +7,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model albums {
+  id        String  @id
+  name      String
+  artist_id String
+  year      Int?
+  image_url String?
+  artists   artists @relation(fields: [artist_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_album_artist")
+  songs     songs[]
+}
 
-model Songs {
-  id       String @id @default(uuid())
-  title    String
-  artist   String
-  album    String
-  duration Int
-  imageUrl String
-  mp3Url   String?
+model artists {
+  id        String   @id
+  name      String
+  image_url String?
+  albums    albums[]
+  songs     songs[]
+}
+
+model songs {
+  id        String  @id
+  title     String
+  artist_id String
+  album_id  String
+  duration  Int?
+  image_url String?
+  mp3Url    String?
+  albums    albums  @relation(fields: [album_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_song_album")
+  artists   artists @relation(fields: [artist_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_song_artist")
 }

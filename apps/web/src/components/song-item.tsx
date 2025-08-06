@@ -9,7 +9,13 @@ const formatDuration = (seconds: number): string => {
 };
 
 export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }: SongItemProps) {
+  // Check for mp3Url from the database
   const hasAudio = Boolean(song.mp3Url && song.mp3Url.trim() !== '');
+  
+  // Handle both old and new schema
+  const artistName = typeof song.artists === 'string' ? song.artists : song.artists?.name || 'Unknown Artist';
+  const albumName = typeof song.albums === 'string' ? song.albums : song.albums?.name || 'Unknown Album';
+  const imageUrl = song.image_url || '/default-album.jpg'; // Fallback image
 
   return (
     <div 
@@ -51,9 +57,12 @@ export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }:
 
       <div className="col-span-5 md:col-span-4 flex items-center min-w-0">
         <img 
-          src={song.imageUrl} 
+          src={imageUrl} 
           alt={`${song.title} cover`} 
           className="song-image w-12 h-12 mr-4 rounded-xl shadow-soft"
+          onError={(e) => {
+            e.currentTarget.src = '/default-album.jpg';
+          }}
         />
         <div className="song-info flex flex-col min-w-0 gap-1">
           <h3 className={`song-title font-semibold text-sm truncate transition-colors duration-200 ${
@@ -64,7 +73,7 @@ export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }:
             {song.title}
           </h3>
           <p className="song-artist text-dark-300 text-xs truncate group-hover:text-dark-200 transition-colors duration-200">
-            {song.artist}
+            {artistName}
             {!hasAudio && (
               <span className="ml-2 text-dark-500 text-xs">
                 (No audio)
@@ -76,13 +85,13 @@ export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }:
 
       <div className="hidden md:block col-span-3">
         <p className="song-album text-dark-400 text-sm truncate group-hover:text-dark-300 transition-colors duration-200">
-          {song.album}
+          {albumName}
         </p>
       </div>
 
       <div className="col-span-6 md:col-span-4 text-right">
         <p className="song-duration text-dark-400 text-sm font-mono">
-          {formatDuration(song.duration)}
+          {song.duration ? formatDuration(song.duration) : '0:00'}
         </p>
       </div>
     </div>

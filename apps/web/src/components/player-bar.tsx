@@ -25,22 +25,29 @@ export default function PlayerBar() {
   if (!currentSong) return null;
 
   const hasAudio = Boolean(currentSong.mp3Url && currentSong.mp3Url.trim() !== '');
+  
+  // Handle both old and new schema
+  const artistName = typeof currentSong.artists === 'string' ? currentSong.artists : currentSong.artists?.name || 'Unknown Artist';
+  const imageUrl = currentSong.image_url || '/default-album.jpg';
 
   return (
-    <div className="glass border-t border-dark-700/50 p-6 backdrop-blur-md">
+    <div className="glass border-t border-light-200/50 dark:border-dark-700/50 p-6 backdrop-blur-md">
       <div className="flex items-center justify-between">
         <div className="flex items-center min-w-0 flex-1">
           <img 
-            src={currentSong.imageUrl} 
+            src={imageUrl} 
             alt={`${currentSong.title} cover`}
             className="w-16 h-16 rounded-2xl mr-4 shadow-soft object-cover"
+            onError={(e) => {
+              e.currentTarget.src = '/default-album.jpg';
+            }}
           />
           <div className="min-w-0">
-            <h4 className="text-white font-medium text-sm truncate group-hover:text-orange-100 transition-colors duration-200">
+            <h4 className="text-light-950 dark:text-white font-medium text-sm truncate group-hover:text-orange-600 dark:group-hover:text-orange-100 transition-colors duration-200">
               {currentSong.title}
             </h4>
-            <p className="text-dark-300 text-xs truncate">
-              {currentSong.artist}
+            <p className="text-light-600 dark:text-dark-300 text-xs truncate">
+              {artistName}
             </p>
           </div>
         </div>
@@ -55,10 +62,10 @@ export default function PlayerBar() {
         </div>
 
         <div className="flex items-center space-x-4 flex-1 justify-end">
-          <span className="text-dark-400 text-xs font-mono">
+          <span className="text-light-500 dark:text-dark-400 text-xs font-mono">
             {formatDuration(currentTime)}
           </span>
-          <span className="text-dark-400 text-xs font-mono">
+          <span className="text-light-500 dark:text-dark-400 text-xs font-mono">
             {formatDuration(duration)}
           </span>
           

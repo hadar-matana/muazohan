@@ -32,11 +32,12 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         ...prev,
         currentSong: song,
         currentTime: 0,
-        duration: song.duration,
+        duration: song.duration || 0,
       }));
 
       if (!song.mp3Url || song.mp3Url.trim() === '') {
-        console.warn(`No mp3Url found for song: "${song.title}" by ${song.artist}`);
+        const artistName = typeof song.artists === 'string' ? song.artists : song.artists?.name || 'Unknown Artist';
+        console.warn(`No mp3Url found for song: "${song.title}" by ${artistName}`);
         setState(prev => ({ ...prev, isPlaying: false }));
         return;
       }

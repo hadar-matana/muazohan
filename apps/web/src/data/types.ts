@@ -2,25 +2,31 @@
 export interface Artist {
   id: string;
   name: string;
-  imageUrl: string;
+  image_url?: string | null;
+  albums?: Album[];
+  songs?: Song[];
 }
 
 export interface Album {
   id: string;
   name: string;
-  artist: Artist;
-  year: number;
-  imageUrl: string;
+  year?: number | null;
+  image_url?: string | null;
+  artist_id: string;
+  artists?: Artist;
+  songs?: Song[];
 }
 
 export interface Song {
   id: string;
   title: string;
-  artist: string;
-  album: string;
-  duration: number; // in seconds
-  imageUrl: string;
+  duration?: number | null;
+  image_url?: string | null;
   mp3Url?: string | null;
+  artist_id: string;
+  artists?: Artist;
+  album_id: string;
+  albums?: Album;
 }
 
 

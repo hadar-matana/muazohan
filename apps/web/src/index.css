@@ -6,45 +6,45 @@
 
 @layer base {
   * {
-    @apply border-dark-700/50;
+    @apply border-dark-700/50 dark:border-dark-700/50;
   }
   
   body {
-    @apply bg-dark-950 text-white font-sans antialiased;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    @apply bg-light-100 text-light-900 dark:bg-dark-950 dark:text-white font-sans antialiased;
+    background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
     min-height: 100vh;
   }
 
-  /* Smooth scrolling */
+  .dark body {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  }
+
   html {
     scroll-behavior: smooth;
   }
 
-  /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-dark-800;
+    @apply bg-light-400 dark:bg-dark-800;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-dark-600 rounded-full;
+    @apply bg-light-600 dark:bg-dark-600 rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-dark-500;
+    @apply bg-light-700 dark:bg-dark-500;
   }
 
-  /* Selection styling */
   ::selection {
     @apply bg-orange-500/20 text-orange-100;
   }
 }
 
 @layer components {
-  /* Modern button styles */
   .btn {
     @apply inline-flex items-center justify-center px-4 py-2 rounded-xl font-medium transition-all duration-200 ease-out;
   }
@@ -54,23 +54,21 @@
   }
 
   .btn-secondary {
-    @apply bg-dark-700 hover:bg-dark-600 text-white border border-dark-600 hover:border-dark-500 shadow-soft;
+    @apply bg-light-500 hover:bg-light-600 dark:bg-dark-700 dark:hover:bg-dark-600 text-light-50 dark:text-white border border-light-600 hover:border-light-700 dark:border-dark-600 dark:hover:border-dark-500 shadow-soft;
   }
 
   .btn-ghost {
-    @apply text-dark-300 hover:text-white hover:bg-dark-800/50;
+    @apply text-light-600 hover:text-light-900 dark:text-dark-300 dark:hover:text-white hover:bg-light-500/60 dark:hover:bg-dark-800/50;
   }
 
-  /* Card styles */
   .card {
-    @apply bg-dark-800/50 backdrop-blur-sm border border-dark-700/50 rounded-2xl shadow-soft hover:shadow-soft-lg transition-all duration-300;
+    @apply bg-light-400/80 dark:bg-dark-800/50 backdrop-blur-sm border border-light-500/50 dark:border-dark-700/50 rounded-2xl shadow-soft hover:shadow-soft-lg transition-all duration-300;
   }
 
   .card-hover {
-    @apply hover:bg-dark-700/70 hover:border-dark-600/50 hover:scale-[1.02];
+    @apply hover:bg-light-500/80 hover:border-light-600/50 dark:hover:bg-dark-700/70 dark:hover:border-dark-600/50 hover:scale-[1.02];
   }
 
-  /* Play button with modern styling */
   .play-button {
     @apply flex items-center justify-center w-12 h-12 bg-orange-500 hover:bg-orange-600 rounded-2xl hover:scale-105 transition-all duration-200 cursor-pointer shadow-soft hover:shadow-glow;
   }
@@ -79,66 +77,58 @@
     @apply w-6 h-6 text-white;
   }
 
-  /* Modern song row styling */
   .song-row {
-    @apply flex items-center p-4 rounded-2xl cursor-pointer transition-all duration-200 ease-out hover:bg-dark-700/50 hover:scale-[1.01];
+    @apply flex items-center p-4 rounded-2xl cursor-pointer transition-all duration-200 ease-out hover:bg-light-500/60 dark:hover:bg-dark-700/50 hover:scale-[1.01];
   }
 
   .song-row:hover {
-    @apply bg-dark-700/50;
+    @apply bg-light-500/60 dark:bg-dark-700/50;
   }
 
-  /* Song image with modern styling */
   .song-image {
     @apply w-12 h-12 rounded-xl object-cover shadow-soft;
   }
   
-  /* Song info with improved typography */
   .song-info {
     @apply flex-1 min-w-0 px-4;
   }
   
   .song-title {
-    @apply text-white font-medium text-sm truncate group-hover:text-orange-100 transition-colors duration-200;
+    @apply text-light-950 dark:text-white font-medium text-sm truncate group-hover:text-orange-600 dark:group-hover:text-orange-100 transition-colors duration-200;
   }
   
   .song-artist {
-    @apply text-dark-300 text-sm truncate group-hover:text-dark-200 transition-colors duration-200;
+    @apply text-light-600 dark:text-dark-300 text-sm truncate group-hover:text-light-800 dark:group-hover:text-dark-200 transition-colors duration-200;
   }
   
   .song-album {
-    @apply hidden md:block text-dark-400 text-sm truncate group-hover:text-dark-300 transition-colors duration-200;
+    @apply hidden md:block text-light-500 dark:text-dark-400 text-sm truncate group-hover:text-light-600 dark:group-hover:text-dark-300 transition-colors duration-200;
   }
   
   .song-duration {
-    @apply text-dark-400 text-sm font-mono;
+    @apply text-light-500 dark:text-dark-400 text-sm font-mono;
   }
 
-  /* Modern input styles */
   .input {
-    @apply bg-dark-800 border border-dark-600 rounded-xl px-4 py-3 text-white placeholder-dark-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all duration-200;
+    @apply bg-light-400 dark:bg-dark-800 border border-light-600 dark:border-dark-600 rounded-xl px-4 py-3 text-light-900 dark:text-white placeholder-light-500 dark:placeholder-dark-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all duration-200;
   }
 
-  /* Modern progress bar */
   .progress-bar {
-    @apply bg-dark-700 rounded-full overflow-hidden;
+    @apply bg-light-500 dark:bg-dark-700 rounded-full overflow-hidden;
   }
 
   .progress-fill {
     @apply bg-gradient-to-r from-orange-500 to-orange-600 h-full rounded-full transition-all duration-200;
   }
 
-  /* Glass morphism effect */
   .glass {
-    @apply bg-dark-800/30 backdrop-blur-md border border-dark-700/50;
+    @apply bg-light-300/70 dark:bg-dark-800/30 backdrop-blur-md border border-light-400/50 dark:border-dark-700/50;
   }
 
-  /* Gradient text */
   .gradient-text {
     @apply bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent;
   }
 
-  /* Floating animation */
   .float {
     animation: float 3s ease-in-out infinite;
   }
@@ -148,7 +138,6 @@
     50% { transform: translateY(-10px); }
   }
 
-  /* Pulse glow effect */
   .pulse-glow {
     animation: pulseGlow 2s ease-in-out infinite alternate;
   }
