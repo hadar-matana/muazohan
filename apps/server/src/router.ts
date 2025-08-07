@@ -1,20 +1,14 @@
 import { initTRPC } from '@trpc/server';
-import { PrismaClient } from '@prisma/client';
-import { SongService } from './services/SongService';
-import { ArtistService } from './services/ArtistService';
-import { AlbumService } from './services/AlbumService';
+import { MicroserviceClient } from './services/MicroserviceClient';
 
 const t = initTRPC.create();
 
-const prisma = new PrismaClient();
-const songService = new SongService(prisma);
-const artistService = new ArtistService(prisma);
-const albumService = new AlbumService(prisma);
+const microserviceClient = new MicroserviceClient();
 
 export const appRouter = t.router({
   getSongs: t.procedure.query(async () => {
     try {
-      return await songService.getAllSongs();
+      return await microserviceClient.getAllSongs();
     } catch (error) {
       console.error('Error in getSongs procedure:', error);
       throw new Error('Failed to fetch songs');
@@ -23,7 +17,7 @@ export const appRouter = t.router({
   
   getArtists: t.procedure.query(async () => {
     try {
-      return await artistService.getAllArtists();
+      return await microserviceClient.getAllArtists();
     } catch (error) {
       console.error('Error in getArtists procedure:', error);
       throw new Error('Failed to fetch artists');
@@ -39,7 +33,7 @@ export const appRouter = t.router({
     })
     .query(async ({ input }) => {
       try {
-        return await artistService.getArtistById(input.id);
+        return await microserviceClient.getArtistById(input.id);
       } catch (error) {
         console.error('Error in getArtistById procedure:', error);
         throw new Error('Failed to fetch artist');
@@ -48,7 +42,7 @@ export const appRouter = t.router({
 
   getAlbums: t.procedure.query(async () => {
     try {
-      return await albumService.getAllAlbums();
+      return await microserviceClient.getAllAlbums();
     } catch (error) {
       console.error('Error in getAlbums procedure:', error);
       throw new Error('Failed to fetch albums');
@@ -64,26 +58,26 @@ export const appRouter = t.router({
     })
     .query(async ({ input }) => {
       try {
-        return await albumService.getAlbumById(input.id);
+        return await microserviceClient.getAlbumById(input.id);
       } catch (error) {
         console.error('Error in getAlbumById procedure:', error);
         throw new Error('Failed to fetch album');
       }
     }),
 
-  getAlbumsByArtistId: t.procedure
+  searchSongs: t.procedure
     .input((val: unknown) => {
-      if (typeof val === 'object' && val !== null && 'artistId' in val) {
-        return val as { artistId: string };
+      if (typeof val === 'object' && val !== null && 'query' in val) {
+        return val as { query: string };
       }
       throw new Error('Invalid input');
     })
     .query(async ({ input }) => {
       try {
-        return await albumService.getAlbumsByArtistId(input.artistId);
+        return await microserviceClient.searchSongs(input.query);
       } catch (error) {
-        console.error('Error in getAlbumsByArtistId procedure:', error);
-        throw new Error('Failed to fetch albums by artist');
+        console.error('Error in searchSongs procedure:', error);
+        throw new Error('Failed to search songs');
       }
     }),
 });
