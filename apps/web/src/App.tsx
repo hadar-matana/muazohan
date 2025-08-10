@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import PlayerBar from './components/player-bar'
 import Navigation, { ViewType } from './components/navigation'
@@ -8,7 +8,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import ThemeToggle from './components/ui/ThemeToggle';
 
 function AppContent() {
-  const { currentSong } = usePlayer();
+  const { currentSong, togglePlayPause } = usePlayer();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -22,6 +22,30 @@ function AppContent() {
   const handleViewChange = (view: ViewType) => {
     navigate(`/${view}`);
   };
+
+  // Handle keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Only handle spacebar when there's a current song and not typing in an input
+      if (event.code === 'Space' && currentSong) {
+        const target = event.target as HTMLElement;
+        const isInput = target.tagName === 'INPUT' || 
+                       target.tagName === 'TEXTAREA' || 
+                       target.contentEditable === 'true';
+        
+        if (!isInput) {
+          event.preventDefault();
+          togglePlayPause();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [currentSong, togglePlayPause]);
 
   return (
     <div className="h-screen bg-light-100 dark:bg-dark-950 flex flex-col overflow-hidden">

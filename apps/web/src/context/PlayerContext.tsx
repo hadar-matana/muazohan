@@ -33,26 +33,30 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       // Find the index of the song in the playlist
       const songIndex = state.playlist.findIndex(s => s.id === song.id);
       
+      // Always set the current song first, regardless of audio availability
       setState(prev => ({
         ...prev,
         currentSong: song,
         currentIndex: songIndex >= 0 ? songIndex : 0, // Ensure we don't set -1
         currentTime: 0,
         duration: song.duration || 0,
+        isPlaying: false, // Start with not playing
       }));
 
+      // Check if the song has a valid audio URL
       if (!song.mp3Url || song.mp3Url.trim() === '') {
         const artistName = typeof song.artists === 'string' ? song.artists : song.artists?.name || 'Unknown Artist';
         console.warn(`No mp3Url found for song: "${song.title}" by ${artistName}`);
-        setState(prev => ({ ...prev, isPlaying: false }));
-        return;
+        return; // Don't try to play, but keep the currentSong set
       }
 
+      // Try to play the audio
       setState(prev => ({ ...prev, isPlaying: true }));
       await audioProviderRef.current?.play(song.mp3Url);
     } catch (error) {
       console.error('Failed to play song:', error);
       setState(prev => ({ ...prev, isPlaying: false }));
+      // Don't clear currentSong on error - keep it so the player bar stays visible
     }
   };
 
@@ -108,8 +112,11 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setState(prev => ({
       ...prev,
       playlist: songs,
-      currentIndex: -1,
-      currentSong: null,
+      // Only reset currentIndex and currentSong if the current song is not in the new playlist
+      currentIndex: prev.currentSong && songs.find(s => s.id === prev.currentSong?.id) ? 
+        songs.findIndex(s => s.id === prev.currentSong?.id) : -1,
+      currentSong: prev.currentSong && songs.find(s => s.id === prev.currentSong?.id) ? 
+        prev.currentSong : null,
     }));
   };
 

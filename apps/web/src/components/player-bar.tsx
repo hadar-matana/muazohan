@@ -25,9 +25,13 @@ export default function PlayerBar() {
     seekTo 
   } = usePlayer();
 
+
+
   if (!currentSong) return null;
 
   const hasAudio = Boolean(currentSong.mp3Url && currentSong.mp3Url.trim() !== '');
+  
+  // Always show the player bar if there's a current song, even if it doesn't have audio
   
   // Handle both old and new schema
   const artistName = typeof currentSong.artists === 'string' ? currentSong.artists : currentSong.artists?.name || 'Unknown Artist';
