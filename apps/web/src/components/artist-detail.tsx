@@ -1,6 +1,6 @@
 import React from 'react';
 import { trpc } from '../trpc';
-import { Artist, Album } from '../data/types';
+import { Album } from '../data/types';
 
 interface ArtistDetailProps {
   artistId: string;

@@ -1,14 +1,24 @@
 import express from 'express';
 import { DatabaseService } from '../services/DatabaseService';
+import { 
+  validateSongCreate, 
+  validateSongUpdate, 
+  validatePagination, 
+  validateIdParam, 
+  validateSearchQuery 
+} from '../middleware/validation';
 
 const router: express.Router = express.Router();
 const dbService = new DatabaseService();
 
-// Get all songs
-router.get('/', async (req, res) => {
+// Get all songs with pagination
+router.get('/', validatePagination, async (req, res) => {
   try {
-    const songs = await dbService.getAllSongs();
-    res.json({ success: true, data: songs });
+    const page = Number(req.query.page);
+    const limit = Number(req.query.limit);
+    
+    const result = await dbService.getAllSongs({ page, limit });
+    res.json({ success: true, ...result });
   } catch (error) {
     console.error('Error fetching songs:', error);
     res.status(500).json({ error: 'Failed to fetch songs' });
@@ -16,12 +26,9 @@ router.get('/', async (req, res) => {
 });
 
 // Get song by ID
-router.get('/:id', async (req, res) => {
+router.get('/:id', validateIdParam, async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    if (isNaN(id)) {
-      return res.status(400).json({ error: 'Invalid song ID' });
-    }
+    const id = req.params.id;
 
     const song = await dbService.getSongById(id);
     if (!song) {
@@ -36,22 +43,16 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create new song
-router.post('/', async (req, res) => {
+router.post('/', validateSongCreate, async (req, res) => {
   try {
-    const { title, duration, url, artistId, albumId } = req.body;
-
-    if (!title || !duration || !url) {
-      return res.status(400).json({ 
-        error: 'Missing required fields: title, duration, url' 
-      });
-    }
+    const { title, duration, mp3Url, artistId, albumId } = req.body;
 
     const song = await dbService.createSong({
       title,
-      duration: parseInt(duration),
-      url,
-      artistId: artistId ? parseInt(artistId) : undefined,
-      albumId: albumId ? parseInt(albumId) : undefined,
+      duration,
+      mp3Url,
+      artistId,
+      albumId,
     });
 
     res.status(201).json({ success: true, data: song });
@@ -62,14 +63,11 @@ router.post('/', async (req, res) => {
 });
 
 // Update song
-router.put('/:id', async (req, res) => {
+router.put('/:id', validateIdParam, validateSongUpdate, async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    if (isNaN(id)) {
-      return res.status(400).json({ error: 'Invalid song ID' });
-    }
-
-    const song = await dbService.updateSong(id, req.body);
+    const id = req.params.id;
+    const updateData = req.body;
+    const song = await dbService.updateSong(id, updateData);
     res.json({ success: true, data: song });
   } catch (error) {
     console.error('Error updating song:', error);
@@ -78,12 +76,9 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete song
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', validateIdParam, async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    if (isNaN(id)) {
-      return res.status(400).json({ error: 'Invalid song ID' });
-    }
+    const id = req.params.id;
 
     await dbService.deleteSong(id);
     res.json({ success: true, message: 'Song deleted successfully' });
@@ -93,12 +88,15 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-// Search songs
-router.get('/search/:query', async (req, res) => {
+// Search songs with pagination
+router.get('/search/:query', validateSearchQuery, validatePagination, async (req, res) => {
   try {
     const { query } = req.params;
-    const songs = await dbService.searchSongs(query);
-    res.json({ success: true, data: songs });
+    const page = Number(req.query.page);
+    const limit = Number(req.query.limit);
+    
+    const result = await dbService.searchSongs(query, { page, limit });
+    res.json({ success: true, ...result });
   } catch (error) {
     console.error('Error searching songs:', error);
     res.status(500).json({ error: 'Failed to search songs' });

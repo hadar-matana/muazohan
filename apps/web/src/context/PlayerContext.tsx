@@ -7,6 +7,8 @@ const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
 export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, setState] = useState<PlayerState>({
     currentSong: null,
+    playlist: [],
+    currentIndex: -1,
     isPlaying: false,
     currentTime: 0,
     duration: 0,
@@ -28,9 +30,13 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const playSong = async (song: Song) => {
     try {
+      // Find the index of the song in the playlist
+      const songIndex = state.playlist.findIndex(s => s.id === song.id);
+      
       setState(prev => ({
         ...prev,
         currentSong: song,
+        currentIndex: songIndex >= 0 ? songIndex : 0, // Ensure we don't set -1
         currentTime: 0,
         duration: song.duration || 0,
       }));
@@ -98,9 +104,59 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     audioProviderRef.current?.seekTo(time);
   };
 
+  const setPlaylist = (songs: Song[]) => {
+    setState(prev => ({
+      ...prev,
+      playlist: songs,
+      currentIndex: -1,
+      currentSong: null,
+    }));
+  };
+
+  const playNext = async () => {
+    if (state.playlist.length === 0) return;
+    
+    let nextIndex: number;
+    if (state.currentIndex === -1) {
+      // If no song is currently playing, start with the first song
+      nextIndex = 0;
+    } else {
+      nextIndex = (state.currentIndex + 1) % state.playlist.length;
+    }
+    
+    const nextSong = state.playlist[nextIndex];
+    
+    if (nextSong) {
+      await playSong(nextSong);
+    }
+  };
+
+  const playPrevious = async () => {
+    if (state.playlist.length === 0) return;
+    
+    let prevIndex: number;
+    if (state.currentIndex === -1) {
+      // If no song is currently playing, start with the last song
+      prevIndex = state.playlist.length - 1;
+    } else {
+      prevIndex = state.currentIndex === 0 
+        ? state.playlist.length - 1 
+        : state.currentIndex - 1;
+    }
+    
+    const prevSong = state.playlist[prevIndex];
+    
+    if (prevSong) {
+      await playSong(prevSong);
+    }
+  };
+
   const contextValue: PlayerContextType = {
     ...state,
     playSong,
+    setPlaylist,
+    playNext,
+    playPrevious,
     play,
     pause,
     togglePlayPause,

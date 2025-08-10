@@ -1,4 +1,5 @@
 import { initTRPC } from '@trpc/server';
+import { z } from 'zod';
 import { MicroserviceClient } from './services/MicroserviceClient';
 
 const t = initTRPC.create();
@@ -25,12 +26,9 @@ export const appRouter = t.router({
   }),
 
   getArtistById: t.procedure
-    .input((val: unknown) => {
-      if (typeof val === 'object' && val !== null && 'id' in val) {
-        return val as { id: string };
-      }
-      throw new Error('Invalid input');
-    })
+    .input(z.object({
+      id: z.string().min(1, 'Artist ID is required')
+    }))
     .query(async ({ input }) => {
       try {
         return await microserviceClient.getArtistById(input.id);
@@ -50,12 +48,9 @@ export const appRouter = t.router({
   }),
 
   getAlbumById: t.procedure
-    .input((val: unknown) => {
-      if (typeof val === 'object' && val !== null && 'id' in val) {
-        return val as { id: string };
-      }
-      throw new Error('Invalid input');
-    })
+    .input(z.object({
+      id: z.string().min(1, 'Album ID is required')
+    }))
     .query(async ({ input }) => {
       try {
         return await microserviceClient.getAlbumById(input.id);
@@ -66,12 +61,9 @@ export const appRouter = t.router({
     }),
 
   searchSongs: t.procedure
-    .input((val: unknown) => {
-      if (typeof val === 'object' && val !== null && 'query' in val) {
-        return val as { query: string };
-      }
-      throw new Error('Invalid input');
-    })
+    .input(z.object({
+      query: z.string().min(1, 'Search query is required')
+    }))
     .query(async ({ input }) => {
       try {
         return await microserviceClient.searchSongs(input.query);

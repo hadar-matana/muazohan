@@ -15,19 +15,19 @@ const Navigation: React.FC<NavigationProps> = ({ currentView, onViewChange }) =>
   ];
 
   return (
-    <div className="flex space-x-1 p-1 glass rounded-lg">
+    <div className="flex items-center space-x-6">
       {navItems.map((item) => (
         <button
           key={item.id}
           onClick={() => onViewChange(item.id)}
-          className={`flex items-center space-x-1 px-3 py-1.5 rounded-md transition-all duration-200 text-sm ${
+          className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-all duration-200 font-medium ${
             currentView === item.id
-              ? 'bg-orange-500 text-white shadow-lg'
-              : 'text-light-700 dark:text-dark-300 hover:bg-light-200 dark:hover:bg-dark-700'
+              ? 'bg-orange-50 dark:bg-orange-900/20'
+              : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800/50'
           }`}
         >
-          <span className="text-sm">{item.icon}</span>
-          <span className="font-medium">{item.label}</span>
+          <span className="text-lg text-gray-500 dark:text-gray-400">{item.icon}</span>
+          <span className={currentView === item.id ? 'text-orange-500' : ''}>{item.label}</span>
         </button>
       ))}
     </div>

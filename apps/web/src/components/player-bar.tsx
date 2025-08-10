@@ -13,11 +13,14 @@ const formatDuration = (seconds: number): string => {
 export default function PlayerBar() {
   const { 
     currentSong, 
+    playlist,
     isPlaying, 
     currentTime, 
     duration, 
     volume,
-    togglePlayPause, 
+    togglePlayPause,
+    playNext,
+    playPrevious,
     setVolume,
     seekTo 
   } = usePlayer();
@@ -56,8 +59,11 @@ export default function PlayerBar() {
           <PlayerControls
             isPlaying={isPlaying}
             onPlayPause={togglePlayPause}
-            onStop={() => {}}
+            onNext={playNext}
+            onPrevious={playPrevious}
             canPlay={hasAudio}
+            canGoNext={playlist.length > 1}
+            canGoPrevious={playlist.length > 1}
           />
         </div>
 

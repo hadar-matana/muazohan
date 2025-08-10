@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { SongItem } from './song-item';
 import { trpc } from '../trpc';
 import { usePlayer } from '../context/PlayerContext';
@@ -6,9 +7,16 @@ import type { Song } from '../data/types';
 
 
 export default function SongList() {
-  const { playSong, currentSong, isPlaying } = usePlayer();
+  const { playSong, setPlaylist, currentSong, isPlaying } = usePlayer();
 
   const { data: songs, isLoading } = trpc.getSongs.useQuery();
+
+  // Set playlist when songs are loaded
+  React.useEffect(() => {
+    if (songs) {
+      setPlaylist(songs);
+    }
+  }, [songs, setPlaylist]);
 
   if (isLoading) return (
     <div className="flex items-center justify-center h-full">

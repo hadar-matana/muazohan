@@ -14,13 +14,13 @@ app.use(cors({
 
 app.use('/upload', uploadRouter);
 
-app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
-    timestamp: new Date().toISOString(),
-    service: 's3-server'
-  });
-});
+// app.get('/health', (req, res) => {
+//   res.json({ 
+//     status: 'ok', 
+//     timestamp: new Date().toISOString(),
+//     service: 's3-server'
+//   });
+// });
 
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error('Unhandled error:', err);

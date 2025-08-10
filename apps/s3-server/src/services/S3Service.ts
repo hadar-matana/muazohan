@@ -49,33 +49,33 @@ export class S3Service {
     }
   }
 
-  async getFileUrl(key: string, expiresIn: number = 3600): Promise<string> {
-    const params = {
-      Bucket: config.awsBucketName,
-      Key: key,
-      Expires: expiresIn,
-    };
+  // async getFileUrl(key: string, expiresIn: number = 3600): Promise<string> {
+  //   const params = {
+  //     Bucket: config.awsBucketName,
+  //     Key: key,
+  //     Expires: expiresIn,
+  //   };
 
-    try {
-      return this.s3.getSignedUrl('getObject', params);
-    } catch (error) {
-      console.error('S3 get signed URL error:', error);
-      throw new Error('Failed to generate signed URL');
-    }
-  }
+  //   try {
+  //     return this.s3.getSignedUrl('getObject', params);
+  //   } catch (error) {
+  //     console.error('S3 get signed URL error:', error);
+  //     throw new Error('Failed to generate signed URL');
+  //   }
+  // }
 
-  async listFiles(prefix: string = ''): Promise<AWS.S3.Object[]> {
-    const params = {
-      Bucket: config.awsBucketName,
-      Prefix: prefix,
-    };
+  // async listFiles(prefix: string = ''): Promise<AWS.S3.Object[]> {
+  //   const params = {
+  //     Bucket: config.awsBucketName,
+  //     Prefix: prefix,
+  //   };
 
-    try {
-      const data = await this.s3.listObjectsV2(params).promise();
-      return data.Contents || [];
-    } catch (error) {
-      console.error('S3 list files error:', error);
-      throw new Error('Failed to list files from S3');
-    }
-  }
+  //   try {
+  //     const data = await this.s3.listObjectsV2(params).promise();
+  //     return data.Contents || [];
+  //   } catch (error) {
+  //     console.error('S3 list files error:', error);
+  //     throw new Error('Failed to list files from S3');
+  //   }
+  // }
 }

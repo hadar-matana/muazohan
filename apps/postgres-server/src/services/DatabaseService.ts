@@ -1,261 +1,108 @@
-import { PrismaClient } from '@prisma/client';
+import { SongService } from './SongService';
+import { ArtistService } from './ArtistService';
+import { AlbumService } from './AlbumService';
+import { PaginationOptions, PaginatedResult } from '../types';
 
 export class DatabaseService {
-  private prisma: PrismaClient;
+  public songs: SongService;
+  public artists: ArtistService;
+  public albums: AlbumService;
 
   constructor() {
-    this.prisma = new PrismaClient();
+    this.songs = new SongService();
+    this.artists = new ArtistService();
+    this.albums = new AlbumService();
   }
 
-  // Song operations
-  async getAllSongs() {
-    try {
-      return await this.prisma.songs.findMany({
-        include: {
-          artists: true,
-          albums: true
-        }
-      });
-    } catch (error) {
-      console.error('Error fetching songs:', error);
-      throw new Error('Failed to fetch songs');
-    }
+  async getAllSongs(options?: PaginationOptions): Promise<PaginatedResult<any>> {
+    return this.songs.getAllSongs(options);
   }
 
-  async getSongById(id: number) {
-    try {
-      return await this.prisma.songs.findUnique({
-        where: { id },
-        include: {
-          artists: true,
-          albums: true
-        }
-      });
-    } catch (error) {
-      console.error('Error fetching song:', error);
-      throw new Error('Failed to fetch song');
-    }
+  async getSongById(id: string) {
+    return this.songs.getSongById(id);
   }
 
   async createSong(data: {
     title: string;
-    duration: number;
-    url: string;
-    artistId?: number;
-    albumId?: number;
+    duration?: number;
+    mp3Url?: string;
+    artistId: string;
+    albumId: string;
   }) {
-    try {
-      return await this.prisma.songs.create({
-        data,
-        include: {
-          artists: true,
-          albums: true
-        }
-      });
-    } catch (error) {
-      console.error('Error creating song:', error);
-      throw new Error('Failed to create song');
-    }
+    return this.songs.createSong(data);
   }
 
-  async updateSong(id: number, data: any) {
-    try {
-      return await this.prisma.songs.update({
-        where: { id },
-        data,
-        include: {
-          artists: true,
-          albums: true
-        }
-      });
-    } catch (error) {
-      console.error('Error updating song:', error);
-      throw new Error('Failed to update song');
-    }
+  async updateSong(id: string, data: {
+    title?: string;
+    duration?: number;
+    mp3Url?: string;
+    artistId?: string;
+    albumId?: string;
+  }) {
+    return this.songs.updateSong(id, data);
   }
 
-  async deleteSong(id: number) {
-    try {
-      return await this.prisma.songs.delete({
-        where: { id }
-      });
-    } catch (error) {
-      console.error('Error deleting song:', error);
-      throw new Error('Failed to delete song');
-    }
+  async deleteSong(id: string) {
+    return this.songs.deleteSong(id);
   }
 
-  // Artist operations
   async getAllArtists() {
-    try {
-      return await this.prisma.artists.findMany({
-        include: {
-          songs: true,
-          albums: true
-        }
-      });
-    } catch (error) {
-      console.error('Error fetching artists:', error);
-      throw new Error('Failed to fetch artists');
-    }
+    return this.artists.getAllArtists();
   }
 
-  async getArtistById(id: number) {
-    try {
-      return await this.prisma.artists.findUnique({
-        where: { id },
-        include: {
-          songs: true,
-          albums: true
-        }
-      });
-    } catch (error) {
-      console.error('Error fetching artist:', error);
-      throw new Error('Failed to fetch artist');
-    }
+  async getArtistById(id: string) {
+    return this.artists.getArtistById(id);
   }
 
-  async createArtist(data: { name: string; bio?: string }) {
-    try {
-      return await this.prisma.artists.create({
-        data,
-        include: {
-          songs: true,
-          albums: true
-        }
-      });
-    } catch (error) {
-      console.error('Error creating artist:', error);
-      throw new Error('Failed to create artist');
-    }
+  async createArtist(data: { name: string; imageUrl?: string }) {
+    return this.artists.createArtist(data);
   }
 
-  async updateArtist(id: number, data: any) {
-    try {
-      return await this.prisma.artists.update({
-        where: { id },
-        data,
-        include: {
-          songs: true,
-          albums: true
-        }
-      });
-    } catch (error) {
-      console.error('Error updating artist:', error);
-      throw new Error('Failed to update artist');
-    }
+  async updateArtist(id: string, data: { name?: string; imageUrl?: string }) {
+    return this.artists.updateArtist(id, data);
   }
 
-  async deleteArtist(id: number) {
-    try {
-      return await this.prisma.artists.delete({
-        where: { id }
-      });
-    } catch (error) {
-      console.error('Error deleting artist:', error);
-      throw new Error('Failed to delete artist');
-    }
+  async deleteArtist(id: string) {
+    return this.artists.deleteArtist(id);
   }
 
-  // Album operations
   async getAllAlbums() {
-    try {
-      return await this.prisma.albums.findMany({
-        include: {
-          songs: true,
-          artists: true
-        }
-      });
-    } catch (error) {
-      console.error('Error fetching albums:', error);
-      throw new Error('Failed to fetch albums');
-    }
+    return this.albums.getAllAlbums();
   }
 
-  async getAlbumById(id: number) {
-    try {
-      return await this.prisma.albums.findUnique({
-        where: { id },
-        include: {
-          songs: true,
-          artists: true
-        }
-      });
-    } catch (error) {
-      console.error('Error fetching album:', error);
-      throw new Error('Failed to fetch album');
-    }
+  async getAlbumById(id: string) {
+    return this.albums.getAlbumById(id);
   }
 
   async createAlbum(data: {
-    title: string;
-    releaseDate: Date;
-    artistId?: number;
+    name: string;
+    year?: number;
+    artistId: string;
+    imageUrl?: string;
   }) {
-    try {
-      return await this.prisma.albums.create({
-        data,
-        include: {
-          songs: true,
-          artists: true
-        }
-      });
-    } catch (error) {
-      console.error('Error creating album:', error);
-      throw new Error('Failed to create album');
-    }
+    return this.albums.createAlbum(data);
   }
 
-  async updateAlbum(id: number, data: any) {
-    try {
-      return await this.prisma.albums.update({
-        where: { id },
-        data,
-        include: {
-          songs: true,
-          artists: true
-        }
-      });
-    } catch (error) {
-      console.error('Error updating album:', error);
-      throw new Error('Failed to update album');
-    }
+  async updateAlbum(id: string, data: {
+    name?: string;
+    year?: number;
+    artistId?: string;
+    imageUrl?: string;
+  }) {
+    return this.albums.updateAlbum(id, data);
   }
 
-  async deleteAlbum(id: number) {
-    try {
-      return await this.prisma.albums.delete({
-        where: { id }
-      });
-    } catch (error) {
-      console.error('Error deleting album:', error);
-      throw new Error('Failed to delete album');
-    }
+  async deleteAlbum(id: string) {
+    return this.albums.deleteAlbum(id);
   }
 
-  // Search operations
-  async searchSongs(query: string) {
-    try {
-      return await this.prisma.songs.findMany({
-        where: {
-          OR: [
-            { title: { contains: query, mode: 'insensitive' } },
-            { artists: { name: { contains: query, mode: 'insensitive' } } },
-            { albums: { title: { contains: query, mode: 'insensitive' } } }
-          ]
-        },
-        include: {
-          artists: true,
-          albums: true
-        }
-      });
-    } catch (error) {
-      console.error('Error searching songs:', error);
-      throw new Error('Failed to search songs');
-    }
+  async searchSongs(query: string, options?: PaginationOptions): Promise<PaginatedResult<any>> {
+    return this.songs.searchSongs(query, options);
   }
 
   async disconnect() {
-    await this.prisma.$disconnect();
+    await this.songs.disconnect();
+    await this.artists.disconnect();
+    await this.albums.disconnect();
   }
 }

@@ -1,5 +1,10 @@
 import express from 'express';
 import { DatabaseService } from '../services/DatabaseService';
+import { 
+  validateArtistCreate, 
+  validateArtistUpdate, 
+  validateIdParam 
+} from '../middleware/validation';
 
 const router: express.Router = express.Router();
 const dbService = new DatabaseService();
@@ -16,12 +21,9 @@ router.get('/', async (req, res) => {
 });
 
 // Get artist by ID
-router.get('/:id', async (req, res) => {
+router.get('/:id', validateIdParam, async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    if (isNaN(id)) {
-      return res.status(400).json({ error: 'Invalid artist ID' });
-    }
+    const id = req.params.id;
 
     const artist = await dbService.getArtistById(id);
     if (!artist) {
@@ -36,17 +38,11 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create new artist
-router.post('/', async (req, res) => {
+router.post('/', validateArtistCreate, async (req, res) => {
   try {
-    const { name, bio } = req.body;
+    const { name, imageUrl } = req.body;
 
-    if (!name) {
-      return res.status(400).json({ 
-        error: 'Missing required field: name' 
-      });
-    }
-
-    const artist = await dbService.createArtist({ name, bio });
+    const artist = await dbService.createArtist({ name, imageUrl });
     res.status(201).json({ success: true, data: artist });
   } catch (error) {
     console.error('Error creating artist:', error);
@@ -55,14 +51,11 @@ router.post('/', async (req, res) => {
 });
 
 // Update artist
-router.put('/:id', async (req, res) => {
+router.put('/:id', validateIdParam, validateArtistUpdate, async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    if (isNaN(id)) {
-      return res.status(400).json({ error: 'Invalid artist ID' });
-    }
-
-    const artist = await dbService.updateArtist(id, req.body);
+    const id = req.params.id;
+    const updateData = req.body;
+    const artist = await dbService.updateArtist(id, updateData);
     res.json({ success: true, data: artist });
   } catch (error) {
     console.error('Error updating artist:', error);
@@ -71,12 +64,9 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete artist
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', validateIdParam, async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    if (isNaN(id)) {
-      return res.status(400).json({ error: 'Invalid artist ID' });
-    }
+    const id = req.params.id;
 
     await dbService.deleteArtist(id);
     res.json({ success: true, message: 'Artist deleted successfully' });

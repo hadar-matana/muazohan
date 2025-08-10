@@ -34,6 +34,8 @@ export interface Song {
 // Player state management (SRP)
 export interface PlayerState {
   currentSong: Song | null;
+  playlist: Song[];
+  currentIndex: number;
   isPlaying: boolean;
   currentTime: number;
   duration: number;
@@ -43,6 +45,9 @@ export interface PlayerState {
 // Player actions (ISP)
 export interface PlayerActions {
   playSong(song: Song): void;
+  setPlaylist(songs: Song[]): void;
+  playNext(): void;
+  playPrevious(): void;
   play(): void;
   pause(): void;
   togglePlayPause(): void;
@@ -73,8 +78,11 @@ export interface PlayableItemProps {
 export interface PlayerControlsProps {
   isPlaying: boolean;
   onPlayPause: () => void;
-  onStop: () => void;
+  onNext: () => void;
+  onPrevious: () => void;
   canPlay: boolean;
+  canGoNext: boolean;
+  canGoPrevious: boolean;
 }
 
 export interface ProgressBarProps {

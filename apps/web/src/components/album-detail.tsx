@@ -1,7 +1,8 @@
 import React from 'react';
 import { trpc } from '../trpc';
-import { Album, Song } from '../data/types';
+import { Song } from '../data/types';
 import { SongItem } from './song-item';
+import { usePlayer } from '../context/PlayerContext';
 
 interface AlbumDetailProps {
   albumId: string;
@@ -11,6 +12,14 @@ interface AlbumDetailProps {
 
 const AlbumDetail: React.FC<AlbumDetailProps> = ({ albumId, onSongClick, onBack }) => {
   const { data: album, isLoading, error } = trpc.getAlbumById.useQuery({ id: albumId });
+  const { setPlaylist, currentSong, isPlaying } = usePlayer();
+
+  // Set playlist when album songs are loaded
+  React.useEffect(() => {
+    if (album?.songs) {
+      setPlaylist(album.songs);
+    }
+  }, [album?.songs, setPlaylist]);
 
   if (isLoading) {
     return (
@@ -95,8 +104,8 @@ const AlbumDetail: React.FC<AlbumDetailProps> = ({ albumId, onSongClick, onBack 
                 <SongItem
                   song={song}
                   index={index}
-                  isCurrentSong={false}
-                  isPlaying={false}
+                  isCurrentSong={currentSong?.id === song.id}
+                  isPlaying={isPlaying && currentSong?.id === song.id}
                   onPlayPause={() => onSongClick(song)}
                 />
               </div>

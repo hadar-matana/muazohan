@@ -1,19 +1,15 @@
 import express from 'express';
 import multer from 'multer';
 import { S3Service } from '../services/S3Service';
+import { validateUpload, validateFileUpload, validateDeleteFile } from '../middleware/validation';
 
 const router: express.Router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 const s3Service = new S3Service();
 
-// Upload a single file
-router.post('/', upload.single('file'), async (req, res) => {
+router.post('/', upload.single('file'), validateUpload, validateFileUpload, async (req, res) => {
   try {
     const file = (req as any).file;
-    if (!file) {
-      return res.status(400).json({ error: 'No file uploaded' });
-    }
-
     const folder = req.body.folder || 'songs';
     const url = await s3Service.uploadFile(file, folder);
     
@@ -32,11 +28,34 @@ router.post('/', upload.single('file'), async (req, res) => {
 });
 
 // Upload multiple files
-router.post('/multiple', upload.array('files', 10), async (req, res) => {
+router.post('/multiple', upload.array('files', 10), validateUpload, async (req, res) => {
   try {
     const files = (req as any).files;
     if (!files || files.length === 0) {
       return res.status(400).json({ error: 'No files uploaded' });
+    }
+
+    // Validate each file
+    for (const file of files) {
+      const maxSize = 50 * 1024 * 1024; // 50MB
+      if (file.size > maxSize) {
+        return res.status(400).json({ 
+          error: 'File too large',
+          details: `File ${file.originalname} is too large. Maximum size is ${maxSize / (1024 * 1024)}MB`
+        });
+      }
+
+      const allowedMimeTypes = [
+        'audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg', 'audio/m4a', 'audio/aac',
+        'image/jpeg', 'image/png', 'image/gif', 'image/webp'
+      ];
+
+      if (!allowedMimeTypes.includes(file.mimetype)) {
+        return res.status(400).json({ 
+          error: 'Invalid file type',
+          details: `File ${file.originalname} has invalid type. Allowed types: ${allowedMimeTypes.join(', ')}`
+        });
+      }
     }
 
     const folder = req.body.folder || 'songs';
@@ -58,7 +77,7 @@ router.post('/multiple', upload.array('files', 10), async (req, res) => {
 });
 
 // Delete a file
-router.delete('/:key', async (req, res) => {
+router.delete('/:key', validateDeleteFile, async (req, res) => {
   try {
     const { key } = req.params;
     await s3Service.deleteFile(key);
@@ -74,41 +93,41 @@ router.delete('/:key', async (req, res) => {
 });
 
 // Get signed URL for a file
-router.get('/url/:key', async (req, res) => {
-  try {
-    const { key } = req.params;
-    const expiresIn = parseInt(req.query.expires as string) || 3600;
-    const url = await s3Service.getFileUrl(key, expiresIn);
+// router.get('/url/:key', async (req, res) => {
+//   try {
+//     const { key } = req.params;
+//     const expiresIn = parseInt(req.query.expires as string) || 3600;
+//     const url = await s3Service.getFileUrl(key, expiresIn);
     
-    res.json({ 
-      success: true,
-      url,
-      expiresIn
-    });
-  } catch (error) {
-    console.error('Get URL error:', error);
-    res.status(500).json({ error: 'Failed to generate signed URL' });
-  }
-});
+//     res.json({ 
+//       success: true,
+//       url,
+//       expiresIn
+//     });
+//   } catch (error) {
+//     console.error('Get URL error:', error);
+//     res.status(500).json({ error: 'Failed to generate signed URL' });
+//   }
+// });
 
 // List files in a folder
-router.get('/list', async (req, res) => {
-  try {
-    const prefix = req.query.prefix as string || '';
-    const files = await s3Service.listFiles(prefix);
+// router.get('/list', async (req, res) => {
+//   try {
+//     const prefix = req.query.prefix as string || '';
+//     const files = await s3Service.listFiles(prefix);
     
-    res.json({ 
-      success: true,
-      files: files.map(file => ({
-        key: file.Key,
-        size: file.Size,
-        lastModified: file.LastModified
-      }))
-    });
-  } catch (error) {
-    console.error('List files error:', error);
-    res.status(500).json({ error: 'Failed to list files' });
-  }
-});
+//     res.json({ 
+//       success: true,
+//       files: files.map(file => ({
+//         key: file.Key,
+//         size: file.Size,
+//         lastModified: file.LastModified
+//       }))
+//     });
+//   } catch (error) {
+//     console.error('List files error:', error);
+//     res.status(500).json({ error: 'Failed to list files' });
+//   }
+// });
 
 export default router;
