@@ -1,7 +1,7 @@
 import React from 'react';
 import { Volume2 } from 'lucide-react';
 import type { VolumeControlProps } from '../../data/types';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../hooks/useTheme';
 
 export const VolumeControl: React.FC<VolumeControlProps> = ({ 
   volume, 

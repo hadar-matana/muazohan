@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { SongItem } from './song-item';
 import { UploadSongModal } from './upload-song-modal';
 import { trpc } from '../trpc';
-import { usePlayer } from '../context/PlayerContext';
+import { usePlayer } from '../hooks/usePlayer';
 import type { Song } from '../data/types';
 
 // Simple button component to avoid import issues

@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import PlayerBar from './components/player-bar'
 import Navigation, { ViewType } from './components/navigation'
 import { PlayerProvider } from './context/PlayerContext';
-import { usePlayer } from './context/PlayerContext';
+import { usePlayer } from './hooks/usePlayer';
 import { ThemeProvider } from './context/ThemeContext';
 import ThemeToggle from './components/ui/ThemeToggle';
 

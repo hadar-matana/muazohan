@@ -1,4 +1,4 @@
-import { usePlayer } from '../context/PlayerContext';
+import { usePlayer } from '../hooks/usePlayer';
 import { PlayerControls } from './ui/PlayerControls';
 import { ProgressBar } from './ui/ProgressBar';
 import { VolumeControl } from './ui/VolumeControl';

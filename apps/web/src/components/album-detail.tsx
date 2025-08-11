@@ -2,7 +2,7 @@ import React from 'react';
 import { trpc } from '../trpc';
 import { Song } from '../data/types';
 import { SongItem } from './song-item';
-import { usePlayer } from '../context/PlayerContext';
+import { usePlayer } from '../hooks/usePlayer';
 
 interface AlbumDetailProps {
   albumId: string;
@@ -99,7 +99,7 @@ const AlbumDetail: React.FC<AlbumDetailProps> = ({ albumId, onSongClick, onBack 
           </div>
         ) : (
           <div className="space-y-2">
-            {album.songs.map((song, index) => (
+            {album.songs.map((song: Song, index: number) => (
               <div key={song.id} className="glass rounded-lg">
                 <SongItem
                   song={song}

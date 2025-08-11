@@ -119,7 +119,7 @@ export const appRouter = t.router({
 });
 
 // Helper function to get audio duration from buffer
-async function getAudioDurationFromBuffer(buffer: Buffer): Promise<number> {
+async function getAudioDurationFromBuffer(_buffer: Buffer): Promise<number> {
   // For now, return a default duration since getting actual duration from buffer is complex
   // In a real implementation, you might want to use a library like 'music-metadata' or 'audio-duration'
   return 180; // Default 3 minutes

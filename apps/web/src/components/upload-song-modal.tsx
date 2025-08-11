@@ -162,9 +162,9 @@ export function UploadSongModal({ isOpen, onClose, onSuccess }: UploadSongModalP
       />
       
       {/* Modal */}
-      <div className="relative w-full max-w-md bg-white dark:bg-dark-800 rounded-2xl shadow-2xl border border-light-200/50 dark:border-dark-700/50">
+      <div className="relative w-full max-w-md max-h-[90vh] bg-white dark:bg-dark-800 rounded-2xl shadow-2xl border border-light-200/50 dark:border-dark-700/50 flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-light-200/50 dark:border-dark-700/50">
+        <div className="flex items-center justify-between p-6 border-b border-light-200/50 dark:border-dark-700/50 flex-shrink-0">
           <h2 className="text-xl font-semibold text-light-950 dark:text-white">
             Upload New Song
           </h2>
@@ -180,7 +180,7 @@ export function UploadSongModal({ isOpen, onClose, onSuccess }: UploadSongModalP
         </div>
         
         {/* Content */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="p-6 space-y-6 overflow-y-auto flex-1">
           {/* File Upload */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-light-700 dark:text-dark-300">

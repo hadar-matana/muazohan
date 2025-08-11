@@ -86,7 +86,7 @@ const ArtistDetail: React.FC<ArtistDetailProps> = ({ artistId, onAlbumClick, onB
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {artist.albums.map((album) => (
+            {artist.albums.map((album: Album) => (
               <div 
                 key={album.id}
                 className="glass p-4 rounded-xl hover:scale-105 transition-all duration-300 cursor-pointer group"

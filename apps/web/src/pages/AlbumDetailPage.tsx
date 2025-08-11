@@ -1,8 +1,8 @@
-import React from 'react';
+
 import { useParams, useNavigate } from 'react-router-dom';
 import AlbumDetail from '../components/album-detail';
 import { Song } from '../data/types';
-import { usePlayer } from '../context/PlayerContext';
+import { usePlayer } from '../hooks/usePlayer';
 
 export default function AlbumDetailPage() {
   const { albumId } = useParams<{ albumId: string }>();

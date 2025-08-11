@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useRef, useContext, useCallback } from 'react';
+import React, { createContext, useState, useEffect, useRef, useCallback } from 'react';
 import type { PlayerContextType, PlayerState, Song } from '../data/types';
 import { AudioPlayer } from '../services/AudioProvider';
 
@@ -192,8 +192,3 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
 export { PlayerContext };
 
-export const usePlayer = () => {
-  const context = useContext(PlayerContext);
-  if (!context) throw new Error('usePlayer must be used within a PlayerProvider');
-  return context;
-};
