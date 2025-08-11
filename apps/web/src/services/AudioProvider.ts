@@ -1,6 +1,7 @@
 export class AudioPlayer {
   private audio: HTMLAudioElement;
   private onTimeUpdateCallback?: (currentTime: number) => void;
+  private onEndedCallback?: () => void;
 
   constructor() {
     this.audio = new Audio();
@@ -12,6 +13,9 @@ export class AudioPlayer {
       this.onTimeUpdateCallback?.(this.audio.currentTime);
     });
 
+    this.audio.addEventListener('ended', () => {
+      this.onEndedCallback?.();
+    });
   }
 
   async play(url: string): Promise<void> {
@@ -66,6 +70,10 @@ export class AudioPlayer {
 
   onTimeUpdate(callback: (currentTime: number) => void): void {
     this.onTimeUpdateCallback = callback;
+  }
+
+  onEnded(callback: () => void): void {
+    this.onEndedCallback = callback;
   }
 
   destroy(): void {

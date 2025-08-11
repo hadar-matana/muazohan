@@ -29,6 +29,25 @@ export class MicroserviceClient {
     }
   }
 
+  async uploadFileToS3(file: { buffer: Buffer; originalname: string; mimetype: string; size: number }, folder: string = 'songs'): Promise<string> {
+    try {
+      const formData = new FormData();
+      formData.append('file', new Blob([file.buffer], { type: file.mimetype }), file.originalname);
+      formData.append('folder', folder);
+
+      const response = await axios.post(`${this.s3BaseUrl}/upload`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      return response.data.url;
+    } catch (error) {
+      console.error('Error uploading file to S3 server:', error);
+      throw new Error('Failed to upload file');
+    }
+  }
+
   async deleteFile(key: string): Promise<void> {
     try {
       await axios.delete(`${this.s3BaseUrl}/upload/${key}`);

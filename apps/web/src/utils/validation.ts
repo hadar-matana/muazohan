@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// Common validation schemas for the web application
 export const songSchema = z.object({
   title: z.string().min(1, 'Title is required').max(255, 'Title must be less than 255 characters'),
   duration: z.number().positive().optional(),
@@ -61,12 +60,11 @@ export const validateForm = <T>(schema: z.ZodSchema<T>, data: unknown): { succes
   }
 };
 
-// Real-time validation helper for forms
 export const validateField = <T>(schema: z.ZodSchema<T>, fieldName: string, value: unknown): string | null => {
   try {
-    // Create a partial schema for the specific field
-    const fieldSchema = z.object({ [fieldName]: schema.shape[fieldName as keyof T] });
-    fieldSchema.parse({ [fieldName]: value });
+    const testObject = { [fieldName]: value } as Partial<T>;
+    
+    schema.parse(testObject);
     return null;
   } catch (error) {
     if (error instanceof z.ZodError) {

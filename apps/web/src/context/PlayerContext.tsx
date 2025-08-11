@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useRef, useContext } from 'react';
+import React, { createContext, useState, useEffect, useRef, useContext, useCallback } from 'react';
 import type { PlayerContextType, PlayerState, Song } from '../data/types';
 import { AudioPlayer } from '../services/AudioProvider';
 
@@ -28,7 +28,9 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
   }, []);
 
-  const playSong = async (song: Song) => {
+
+
+  const playSong = useCallback(async (song: Song) => {
     try {
       // Find the index of the song in the playlist
       const songIndex = state.playlist.findIndex(s => s.id === song.id);
@@ -56,11 +58,10 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     } catch (error) {
       console.error('Failed to play song:', error);
       setState(prev => ({ ...prev, isPlaying: false }));
-      // Don't clear currentSong on error - keep it so the player bar stays visible
     }
-  };
+  }, [state.playlist]);
 
-  const play = async () => {
+  const play = useCallback(async () => {
     if (!state.currentSong) return;
 
     if (!state.currentSong.mp3Url || state.currentSong.mp3Url.trim() === '') {
@@ -74,41 +75,41 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     } catch (error) {
       console.error('Failed to resume playback:', error);
     }
-  };
+  }, [state.currentSong]);
 
-  const pause = () => {
+  const pause = useCallback(() => {
     audioProviderRef.current?.pause();
     setState(prev => ({ ...prev, isPlaying: false }));
-  };
+  }, []);
 
-  const togglePlayPause = async () => {
+  const togglePlayPause = useCallback(async () => {
     if (state.isPlaying) {
       pause();
     } else {
       await play();
     }
-  };
+  }, [state.isPlaying, pause, play]);
 
-  const stop = () => {
+  const stop = useCallback(() => {
     audioProviderRef.current?.stop();
     setState(prev => ({ 
       ...prev, 
       isPlaying: false, 
       currentTime: 0 
     }));
-  };
+  }, []);
 
-  const setVolume = (volume: number) => {
+  const setVolume = useCallback((volume: number) => {
     const clampedVolume = Math.max(0, Math.min(1, volume));
     audioProviderRef.current?.setVolume(clampedVolume);
     setState(prev => ({ ...prev, volume: clampedVolume }));
-  };
+  }, []);
 
-  const seekTo = (time: number) => {
+  const seekTo = useCallback((time: number) => {
     audioProviderRef.current?.seekTo(time);
-  };
+  }, []);
 
-  const setPlaylist = (songs: Song[]) => {
+  const setPlaylist = useCallback((songs: Song[]) => {
     setState(prev => ({
       ...prev,
       playlist: songs,
@@ -118,9 +119,9 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       currentSong: prev.currentSong && songs.find(s => s.id === prev.currentSong?.id) ? 
         prev.currentSong : null,
     }));
-  };
+  }, []);
 
-  const playNext = async () => {
+  const playNext = useCallback(async () => {
     if (state.playlist.length === 0) return;
     
     let nextIndex: number;
@@ -136,9 +137,9 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (nextSong) {
       await playSong(nextSong);
     }
-  };
+  }, [state.playlist, state.currentIndex, playSong]);
 
-  const playPrevious = async () => {
+  const playPrevious = useCallback(async () => {
     if (state.playlist.length === 0) return;
     
     let prevIndex: number;
@@ -156,7 +157,17 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (prevSong) {
       await playSong(prevSong);
     }
-  };
+  }, [state.playlist, state.currentIndex, playSong]);
+
+  // Set up the ended event listener to auto-play next song
+  useEffect(() => {
+    if (audioProviderRef.current) {
+      audioProviderRef.current.onEnded(() => {
+        // Auto-play next song when current song ends
+        playNext();
+      });
+    }
+  }, [playNext]);
 
   const contextValue: PlayerContextType = {
     ...state,

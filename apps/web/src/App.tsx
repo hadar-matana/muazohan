@@ -66,7 +66,7 @@ function AppContent() {
         </div>
       </header>
 
-      <main className="flex-1 overflow-hidden relative">
+      <main className="flex-1 overflow-auto relative">
         <div className="absolute inset-0 bg-gradient-to-br from-light-200 via-light-300 to-light-400 dark:from-dark-950 dark:via-dark-900 dark:to-dark-800"></div>
         <div className="relative z-10 h-full overflow-auto">
           <Outlet />
