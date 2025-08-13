@@ -12,6 +12,7 @@ router.post('/', upload.single('file'), validateUpload, validateFileUpload, asyn
     const file = (req as any).file;
     const folder = req.body.folder || 'songs';
     const url = await s3Service.uploadFile(file, folder);
+    console.log('here1')
     
     res.json({ 
       success: true,

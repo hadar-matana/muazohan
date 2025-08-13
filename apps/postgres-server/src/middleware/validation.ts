@@ -5,8 +5,8 @@ const songCreateSchema = z.object({
   title: z.string().min(1).max(255),
   duration: z.number().positive().optional(),
   mp3Url: z.string().url().optional(),
-  artistId: z.string().min(1),
-  albumId: z.string().min(1),
+  artistId: z.string().min(1).optional(),
+  albumId: z.string().min(1).optional(),
 });
 
 const songUpdateSchema = z.object({

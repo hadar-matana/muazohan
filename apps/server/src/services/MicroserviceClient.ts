@@ -1,4 +1,5 @@
 import axios from 'axios';
+import FormData from 'form-data';
 
 export class MicroserviceClient {
   private s3BaseUrl: string;
@@ -31,19 +32,38 @@ export class MicroserviceClient {
 
   async uploadFileToS3(file: { buffer: Buffer; originalname: string; mimetype: string; size: number }, folder: string = 'songs'): Promise<string> {
     try {
+      console.log('Starting S3 upload:', {
+        fileName: file.originalname,
+        fileSize: file.size,
+        mimeType: file.mimetype,
+        folder
+      });
+
       const formData = new FormData();
-      formData.append('file', new Blob([file.buffer], { type: file.mimetype }), file.originalname);
+      formData.append('file', file.buffer, {
+        filename: file.originalname,
+        contentType: file.mimetype
+      });
       formData.append('folder', folder);
 
       const response = await axios.post(`${this.s3BaseUrl}/upload`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          ...formData.getHeaders(),
         },
       });
 
+      console.log('S3 upload successful:', response.data);
       return response.data.url;
     } catch (error) {
       console.error('Error uploading file to S3 server:', error);
+      if (axios.isAxiosError(error)) {
+        console.error('Axios error details:', {
+          status: error.response?.status,
+          statusText: error.response?.statusText,
+          data: error.response?.data,
+          url: error.config?.url
+        });
+      }
       throw new Error('Failed to upload file');
     }
   }
@@ -96,10 +116,38 @@ export class MicroserviceClient {
     albumId?: string;
   }) {
     try {
-      const response = await axios.post(`${this.postgresBaseUrl}/songs`, data);
+      console.log('Creating song in PostgreSQL:', {
+        title: data.title,
+        duration: data.duration,
+        url: data.url,
+        artistId: data.artistId,
+        albumId: data.albumId
+      });
+
+      // Map url to mp3Url for PostgreSQL service
+      const postgresData = {
+        title: data.title,
+        duration: data.duration,
+        mp3Url: data.url,
+        ...(data.artistId && { artistId: data.artistId }),
+        ...(data.albumId && { albumId: data.albumId }),
+      };
+      
+      console.log('PostgreSQL data:', postgresData);
+      
+      const response = await axios.post(`${this.postgresBaseUrl}/songs`, postgresData);
+      console.log('Song created successfully:', response.data);
       return response.data.data;
     } catch (error) {
       console.error('Error creating song in PostgreSQL server:', error);
+      if (axios.isAxiosError(error)) {
+        console.error('Axios error details:', {
+          status: error.response?.status,
+          statusText: error.response?.statusText,
+          data: error.response?.data,
+          url: error.config?.url
+        });
+      }
       throw new Error('Failed to create song');
     }
   }

@@ -48,7 +48,7 @@ export function UploadSongModal({ isOpen, onClose, onSuccess }: UploadSongModalP
   const { data: artists } = trpc.getArtists.useQuery();
   const { data: albums } = trpc.getAlbums.useQuery();
   const uploadSongMutation = trpc.uploadSong.useMutation();
-
+  
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -76,6 +76,7 @@ export function UploadSongModal({ isOpen, onClose, onSuccess }: UploadSongModalP
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
+    
     event.preventDefault();
     
     if (!selectedFile) {
@@ -103,7 +104,7 @@ export function UploadSongModal({ isOpen, onClose, onSuccess }: UploadSongModalP
         artistId: artistId || undefined,
         albumId: albumId || undefined,
       });
-      
+      console.log('here3')
       // Reset form
       setTitle('');
       setSelectedFile(null);
@@ -128,9 +129,28 @@ export function UploadSongModal({ isOpen, onClose, onSuccess }: UploadSongModalP
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
-        const result = reader.result as string;
+        const result = reader.result;
+        
+        // Validate that result is a string
+        if (typeof result !== 'string') {
+          reject(new Error('Failed to read file as data URL'));
+          return;
+        }
+        
+        // Check if result contains the expected data URL format
+        if (!result.includes(',')) {
+          reject(new Error('Invalid data URL format'));
+          return;
+        }
+        
         // Remove the data URL prefix (e.g., "data:audio/mp3;base64,")
         const base64 = result.split(',')[1];
+        
+        if (!base64) {
+          reject(new Error('No base64 data found'));
+          return;
+        }
+        
         resolve(base64);
       };
       reader.onerror = error => reject(error);

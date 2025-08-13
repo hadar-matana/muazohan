@@ -61,18 +61,62 @@ export class SongService extends BaseService {
     title: string;
     duration?: number;
     mp3Url?: string;
-    artistId: string;
-    albumId: string;
+    artistId?: string;
+    albumId?: string;
   }) {
     try {
+      // Handle optional artistId and albumId by creating or finding default values
+      let artistId = data.artistId;
+      let albumId = data.albumId;
+
+      // If no artistId provided, create or find a default "Unknown Artist"
+      if (!artistId) {
+        const defaultArtist = await this.prisma.artists.findFirst({
+          where: { name: 'Unknown Artist' }
+        });
+        
+        if (defaultArtist) {
+          artistId = defaultArtist.id;
+        } else {
+          const newArtist = await this.prisma.artists.create({
+            data: {
+              id: this.generateId(),
+              name: 'Unknown Artist'
+            }
+          });
+          artistId = newArtist.id;
+        }
+      }
+
+      // If no albumId provided, create or find a default "Unknown Album"
+      if (!albumId) {
+        const defaultAlbum = await this.prisma.albums.findFirst({
+          where: { name: 'Unknown Album' }
+        });
+        
+        if (defaultAlbum) {
+          albumId = defaultAlbum.id;
+        } else {
+          const newAlbum = await this.prisma.albums.create({
+            data: {
+              id: this.generateId(),
+              name: 'Unknown Album',
+              artist_id: artistId,
+              year: new Date().getFullYear()
+            }
+          });
+          albumId = newAlbum.id;
+        }
+      }
+
       return await this.prisma.songs.create({
         data: {
           id: this.generateId(),
           title: data.title,
           duration: data.duration,
           mp3Url: data.mp3Url,
-          artist_id: data.artistId,
-          album_id: data.albumId
+          artist_id: artistId,
+          album_id: albumId
         },
         include: {
           artists: true,

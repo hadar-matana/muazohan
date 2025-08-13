@@ -1,6 +1,7 @@
 
 import { SongItemProps } from '../data/types';
 import { Play, Pause, AlertTriangle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const formatDuration = (seconds: number): string => {
   const minutes = Math.floor(seconds / 60);
@@ -9,6 +10,8 @@ const formatDuration = (seconds: number): string => {
 };
 
 export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }: SongItemProps) {
+  const navigate = useNavigate();
+  
   // Check for mp3Url from the database
   const hasAudio = Boolean(song.mp3Url && song.mp3Url.trim() !== '');
   
@@ -16,6 +19,20 @@ export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }:
   const artistName = typeof song.artists === 'string' ? song.artists : song.artists?.name || 'Unknown Artist';
   const albumName = typeof song.albums === 'string' ? song.albums : song.albums?.name || 'Unknown Album';
   const imageUrl = song.image_url || '/default-album.jpg'; // Fallback image
+
+  const handleArtistClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (song.artist_id) {
+      navigate(`/artists/${song.artist_id}`);
+    }
+  };
+
+  const handleAlbumClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (song.album_id) {
+      navigate(`/albums/${song.album_id}`);
+    }
+  };
 
   return (
     <div 
@@ -73,7 +90,13 @@ export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }:
             {song.title}
           </h3>
           <p className="song-artist text-dark-300 text-xs truncate group-hover:text-dark-200 transition-colors duration-200">
-            {artistName}
+            <button
+              onClick={handleArtistClick}
+              className="hover:text-orange-400 hover:underline transition-colors duration-200"
+              disabled={!song.artist_id}
+            >
+              {artistName}
+            </button>
             {!hasAudio && (
               <span className="ml-2 text-dark-500 text-xs">
                 (No audio)
@@ -85,7 +108,13 @@ export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }:
 
       <div className="hidden md:block col-span-3">
         <p className="song-album text-dark-400 text-sm truncate group-hover:text-dark-300 transition-colors duration-200">
-          {albumName}
+          <button
+            onClick={handleAlbumClick}
+            className="hover:text-orange-400 hover:underline transition-colors duration-200"
+            disabled={!song.album_id}
+          >
+            {albumName}
+          </button>
         </p>
       </div>
 

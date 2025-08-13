@@ -84,6 +84,7 @@ export const appRouter = t.router({
     }))
     .mutation(async ({ input }) => {
       try {
+        console.log('here4')
         // Convert base64 to buffer
         const buffer = Buffer.from(input.fileData, 'base64');
         
@@ -113,15 +114,29 @@ export const appRouter = t.router({
         return song;
       } catch (error) {
         console.error('Error in uploadSong procedure:', error);
+        console.error('Error details:', {
+          message: error instanceof Error ? error.message : 'Unknown error',
+          stack: error instanceof Error ? error.stack : undefined,
+          input: {
+            fileName: input.fileName,
+            fileType: input.fileType,
+            title: input.title,
+            artistId: input.artistId,
+            albumId: input.albumId,
+            fileDataLength: input.fileData.length
+          }
+        });
         throw new Error('Failed to upload song');
       }
     }),
 });
 
 // Helper function to get audio duration from buffer
-async function getAudioDurationFromBuffer(_buffer: Buffer): Promise<number> {
+async function getAudioDurationFromBuffer(buffer: Buffer): Promise<number> {
   // For now, return a default duration since getting actual duration from buffer is complex
   // In a real implementation, you might want to use a library like 'music-metadata' or 'audio-duration'
+  // TODO: Implement actual audio duration extraction
+  console.log(`Getting duration for buffer of size: ${buffer.length} bytes`);
   return 180; // Default 3 minutes
 }
 
