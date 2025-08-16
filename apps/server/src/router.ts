@@ -5,7 +5,7 @@ import {
   albumIdSchema,
   searchQuerySchema,
   uploadSongSchema,
-} from './validations';
+} from './validations/schemas';
 
 const t = initTRPC.create();
 

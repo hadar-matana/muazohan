@@ -56,20 +56,7 @@ export interface PlayerActions {
 
 export interface PlayerContextType extends PlayerState, PlayerActions {}
 
-export interface PlayableItem {
-  id: string;
-  title: string;
-  artist: string;
-  imageUrl: string;
-  duration: number;
-}
 
-export interface PlayableItemProps {
-  item: PlayableItem;
-  isCurrent: boolean;
-  isPlaying: boolean;
-  onPlay: () => void;
-}
 
 export interface PlayerControlsProps {
   isPlaying: boolean;
@@ -92,10 +79,7 @@ export interface VolumeControlProps {
   onVolumeChange: (volume: number) => void;
 }
 
-export interface PlayerBarProps {
-  playerState: PlayerState;
-  onPlayPause: () => void;
-}
+
 
 export interface SongItemProps {
   song: Song;

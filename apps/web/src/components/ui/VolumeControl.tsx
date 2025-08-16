@@ -31,4 +31,4 @@ export const VolumeControl: React.FC<VolumeControlProps> = ({
       />
     </div>
   );
-}; 
+};

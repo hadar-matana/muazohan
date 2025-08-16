@@ -34,4 +34,4 @@ const Navigation: React.FC<NavigationProps> = ({ currentView, onViewChange }) =>
   );
 };
 
-export default Navigation; 
+export default Navigation;

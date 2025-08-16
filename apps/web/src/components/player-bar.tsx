@@ -3,7 +3,6 @@ import { PlayerControls } from './ui/PlayerControls';
 import { ProgressBar } from './ui/ProgressBar';
 import { VolumeControl } from './ui/VolumeControl';
 
-
 const formatDuration = (seconds: number): string => {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = Math.floor(seconds % 60);
@@ -13,7 +12,6 @@ const formatDuration = (seconds: number): string => {
 export default function PlayerBar() {
   const { 
     currentSong, 
-    playlist,
     isPlaying, 
     currentTime, 
     duration, 
@@ -24,8 +22,6 @@ export default function PlayerBar() {
     setVolume,
     seekTo 
   } = usePlayer();
-
-
 
   if (!currentSong) return null;
 
@@ -63,8 +59,8 @@ export default function PlayerBar() {
             onNext={playNext}
             onPrevious={playPrevious}
             canPlay={hasAudio}
-            canGoNext={playlist.length > 1}
-            canGoPrevious={playlist.length > 1}
+            canGoNext={true}
+            canGoPrevious={true}
           />
         </div>
 

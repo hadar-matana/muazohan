@@ -20,23 +20,6 @@ const AlbumDetail: React.FC<AlbumDetailProps> = ({ albumId, onSongClick, onBack 
     }
   }, [album?.songs, setPlaylist]);
 
-  // Debug logging
-  React.useEffect(() => {
-    if (album) {
-      console.log('AlbumDetail received album:', JSON.stringify(album, null, 2));
-      if (album.songs) {
-        console.log('Album songs:', album.songs.map((song: any) => ({
-          id: song.id,
-          title: song.title,
-          artistName: song.artists?.name,
-          albumName: song.albums?.name,
-          artistId: song.artist_id,
-          albumId: song.album_id
-        })));
-      }
-    }
-  }, [album]);
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -133,4 +116,4 @@ const AlbumDetail: React.FC<AlbumDetailProps> = ({ albumId, onSongClick, onBack 
   );
 };
 
-export default AlbumDetail; 
+export default AlbumDetail;

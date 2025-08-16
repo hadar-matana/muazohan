@@ -4,7 +4,7 @@ import {
   validateArtistCreate, 
   validateArtistUpdate, 
   validateIdParam 
-} from '../validations';
+} from '../validations/middleware';
 
 const router: express.Router = express.Router();
 const dbService = new DatabaseService();

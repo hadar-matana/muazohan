@@ -1,4 +1,3 @@
-
 import { useNavigate } from 'react-router-dom';
 import ArtistsList from '../components/artists-list';
 import { Artist } from '../data/types';

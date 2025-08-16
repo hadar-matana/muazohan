@@ -112,4 +112,4 @@ const AlbumsList: React.FC<AlbumsListProps> = ({ onAlbumClick }) => {
   );
 };
 
-export default AlbumsList; 
+export default AlbumsList;

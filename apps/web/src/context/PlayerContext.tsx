@@ -28,8 +28,6 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
   }, []);
 
-
-
   const playSong = useCallback(async (song: Song) => {
     try {
       const songIndex = state.playlist.findIndex(s => s.id === song.id);
@@ -182,4 +180,3 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 };
 
 export { PlayerContext };
-

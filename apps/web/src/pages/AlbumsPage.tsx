@@ -1,4 +1,3 @@
-
 import { useNavigate } from 'react-router-dom';
 import AlbumsList from '../components/albums-list';
 import { Album } from '../data/types';

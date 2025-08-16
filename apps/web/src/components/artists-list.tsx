@@ -108,4 +108,4 @@ const ArtistsList: React.FC<ArtistsListProps> = ({ onArtistClick }) => {
   );
 };
 
-export default ArtistsList; 
+export default ArtistsList;

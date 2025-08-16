@@ -130,4 +130,4 @@ const ArtistDetail: React.FC<ArtistDetailProps> = ({ artistId, onAlbumClick, onB
   );
 };
 
-export default ArtistDetail; 
+export default ArtistDetail;

@@ -1,7 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import { S3Service } from '../services/S3Service';
-import { validateUpload, validateFileUpload, validateDeleteFile } from '../validations';
+import { validateUpload, validateFileUpload, validateDeleteFile } from '../validations/middleware';
 
 const router: express.Router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });

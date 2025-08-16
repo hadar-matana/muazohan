@@ -1,7 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import compression from 'compression';
-import helmet from 'helmet';
 import songsRouter from './routes/songs';
 import artistsRouter from './routes/artists';
 import albumsRouter from './routes/albums';
@@ -12,11 +10,9 @@ validateConfig();
 
 const app = express();
 
-// Security middleware
-app.use(helmet());
 
-// Compression middleware
-app.use(compression() as any);
+
+
 
 // CORS configuration
 app.use(cors({
@@ -47,8 +43,8 @@ app.listen(config.port, () => {
   console.log(`📡 Environment: ${config.nodeEnv}`);
   console.log(`🔗 CORS Origin: ${config.corsOrigin}`);
   console.log(`🗄️ Database: PostgreSQL`);
-  console.log(`🛡️ Security: Helmet enabled`);
-  console.log(`🗜️ Compression: Enabled`);
+
+
 
 });
 

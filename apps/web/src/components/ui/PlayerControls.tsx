@@ -42,4 +42,4 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
       </button>
     </div>
   );
-}; 
+};

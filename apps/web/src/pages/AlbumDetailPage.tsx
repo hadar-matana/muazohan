@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate } from 'react-router-dom';
 import AlbumDetail from '../components/album-detail';
 import { Song } from '../data/types';

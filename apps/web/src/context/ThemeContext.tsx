@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ThemeContext, type Theme } from './ThemeContextDef';
 
-
-
 interface ThemeProviderProps {
   children: React.ReactNode;
 }
@@ -37,4 +35,4 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       {children}
     </ThemeContext.Provider>
   );
-}; 
+};
