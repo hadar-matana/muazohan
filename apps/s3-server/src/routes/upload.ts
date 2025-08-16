@@ -1,7 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import { S3Service } from '../services/S3Service';
-import { validateUpload, validateFileUpload, validateDeleteFile } from '../middleware/validation';
+import { validateUpload, validateFileUpload, validateDeleteFile } from '../validations';
 
 const router: express.Router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -12,7 +12,6 @@ router.post('/', upload.single('file'), validateUpload, validateFileUpload, asyn
     const file = (req as any).file;
     const folder = req.body.folder || 'songs';
     const url = await s3Service.uploadFile(file, folder);
-    console.log('here1')
     
     res.json({ 
       success: true,
@@ -93,42 +92,5 @@ router.delete('/:key', validateDeleteFile, async (req, res) => {
   }
 });
 
-// Get signed URL for a file
-// router.get('/url/:key', async (req, res) => {
-//   try {
-//     const { key } = req.params;
-//     const expiresIn = parseInt(req.query.expires as string) || 3600;
-//     const url = await s3Service.getFileUrl(key, expiresIn);
-    
-//     res.json({ 
-//       success: true,
-//       url,
-//       expiresIn
-//     });
-//   } catch (error) {
-//     console.error('Get URL error:', error);
-//     res.status(500).json({ error: 'Failed to generate signed URL' });
-//   }
-// });
-
-// List files in a folder
-// router.get('/list', async (req, res) => {
-//   try {
-//     const prefix = req.query.prefix as string || '';
-//     const files = await s3Service.listFiles(prefix);
-    
-//     res.json({ 
-//       success: true,
-//       files: files.map(file => ({
-//         key: file.Key,
-//         size: file.Size,
-//         lastModified: file.LastModified
-//       }))
-//     });
-//   } catch (error) {
-//     console.error('List files error:', error);
-//     res.status(500).json({ error: 'Failed to list files' });
-//   }
-// });
 
 export default router;

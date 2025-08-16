@@ -87,7 +87,6 @@ export class MicroserviceClient {
     }
   }
 
-  // PostgreSQL Server methods
   async getAllSongs() {
     try {
       const response = await axios.get(`${this.postgresBaseUrl}/songs`);
@@ -124,7 +123,6 @@ export class MicroserviceClient {
         albumId: data.albumId
       });
 
-      // Map url to mp3Url for PostgreSQL service
       const postgresData = {
         title: data.title,
         duration: data.duration,
@@ -233,6 +231,7 @@ export class MicroserviceClient {
   async getAlbumById(id: string) {
     try {
       const response = await axios.get(`${this.postgresBaseUrl}/albums/${id}`);
+      console.log('MicroserviceClient.getAlbumById response:', JSON.stringify(response.data, null, 2));
       return response.data.data;
     } catch (error) {
       console.error('Error fetching album from PostgreSQL server:', error);

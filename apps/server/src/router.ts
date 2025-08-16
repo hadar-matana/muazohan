@@ -1,6 +1,11 @@
 import { initTRPC } from '@trpc/server';
-import { z } from 'zod';
 import { MicroserviceClient } from './services/MicroserviceClient';
+import {
+  artistIdSchema,
+  albumIdSchema,
+  searchQuerySchema,
+  uploadSongSchema,
+} from './validations';
 
 const t = initTRPC.create();
 
@@ -26,9 +31,7 @@ export const appRouter = t.router({
   }),
 
   getArtistById: t.procedure
-    .input(z.object({
-      id: z.string().min(1, 'Artist ID is required')
-    }))
+    .input(artistIdSchema)
     .query(async ({ input }) => {
       try {
         return await microserviceClient.getArtistById(input.id);
@@ -48,9 +51,7 @@ export const appRouter = t.router({
   }),
 
   getAlbumById: t.procedure
-    .input(z.object({
-      id: z.string().min(1, 'Album ID is required')
-    }))
+    .input(albumIdSchema)
     .query(async ({ input }) => {
       try {
         return await microserviceClient.getAlbumById(input.id);
@@ -61,9 +62,7 @@ export const appRouter = t.router({
     }),
 
   searchSongs: t.procedure
-    .input(z.object({
-      query: z.string().min(1, 'Search query is required')
-    }))
+    .input(searchQuerySchema)
     .query(async ({ input }) => {
       try {
         return await microserviceClient.searchSongs(input.query);
@@ -74,21 +73,11 @@ export const appRouter = t.router({
     }),
 
   uploadSong: t.procedure
-    .input(z.object({
-      fileData: z.string(), // Base64 encoded file data
-      fileName: z.string(),
-      fileType: z.string(),
-      title: z.string().min(1, 'Title is required'),
-      artistId: z.string().optional(),
-      albumId: z.string().optional(),
-    }))
+    .input(uploadSongSchema)
     .mutation(async ({ input }) => {
       try {
-        console.log('here4')
-        // Convert base64 to buffer
         const buffer = Buffer.from(input.fileData, 'base64');
         
-        // Create a mock file object for the S3 service
         const mockFile = {
           buffer,
           originalname: input.fileName,
@@ -96,13 +85,10 @@ export const appRouter = t.router({
           size: buffer.length,
         };
         
-        // Upload file to S3
         const mp3Url = await microserviceClient.uploadFileToS3(mockFile, 'songs');
         
-        // Get audio duration from the buffer
         const duration = await getAudioDurationFromBuffer(buffer);
         
-        // Create song in database
         const song = await microserviceClient.createSong({
           title: input.title,
           duration,
@@ -131,13 +117,10 @@ export const appRouter = t.router({
     }),
 });
 
-// Helper function to get audio duration from buffer
 async function getAudioDurationFromBuffer(buffer: Buffer): Promise<number> {
-  // For now, return a default duration since getting actual duration from buffer is complex
-  // In a real implementation, you might want to use a library like 'music-metadata' or 'audio-duration'
-  // TODO: Implement actual audio duration extraction
+
   console.log(`Getting duration for buffer of size: ${buffer.length} bytes`);
-  return 180; // Default 3 minutes
+  return 180; 
 }
 
 export type AppRouter = typeof appRouter;

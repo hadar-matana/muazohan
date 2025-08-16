@@ -6,7 +6,6 @@ import { trpc } from '../trpc';
 import { usePlayer } from '../hooks/usePlayer';
 import type { Song } from '../data/types';
 
-// Simple button component to avoid import issues
 const Button: React.FC<{
   children: React.ReactNode;
   onClick?: () => void;
@@ -45,7 +44,6 @@ export default function SongList() {
 
   const { data: songs, isLoading, refetch } = trpc.getSongs.useQuery();
 
-  // Set playlist when songs are loaded
   React.useEffect(() => {
     if (songs) {
       setPlaylist(songs);
@@ -53,7 +51,7 @@ export default function SongList() {
   }, [songs, setPlaylist]);
 
   const handleUploadSuccess = () => {
-    refetch(); // Refresh the songs list after successful upload
+    refetch(); 
   };
 
   if (isLoading) return (

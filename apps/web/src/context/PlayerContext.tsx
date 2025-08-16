@@ -32,27 +32,23 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const playSong = useCallback(async (song: Song) => {
     try {
-      // Find the index of the song in the playlist
       const songIndex = state.playlist.findIndex(s => s.id === song.id);
       
-      // Always set the current song first, regardless of audio availability
       setState(prev => ({
         ...prev,
         currentSong: song,
-        currentIndex: songIndex >= 0 ? songIndex : 0, // Ensure we don't set -1
+        currentIndex: songIndex >= 0 ? songIndex : 0, 
         currentTime: 0,
         duration: song.duration || 0,
-        isPlaying: false, // Start with not playing
+        isPlaying: false, 
       }));
 
-      // Check if the song has a valid audio URL
       if (!song.mp3Url || song.mp3Url.trim() === '') {
         const artistName = typeof song.artists === 'string' ? song.artists : song.artists?.name || 'Unknown Artist';
         console.warn(`No mp3Url found for song: "${song.title}" by ${artistName}`);
-        return; // Don't try to play, but keep the currentSong set
+        return; 
       }
 
-      // Try to play the audio
       setState(prev => ({ ...prev, isPlaying: true }));
       await audioProviderRef.current?.play(song.mp3Url);
     } catch (error) {
@@ -113,7 +109,6 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setState(prev => ({
       ...prev,
       playlist: songs,
-      // Only reset currentIndex and currentSong if the current song is not in the new playlist
       currentIndex: prev.currentSong && songs.find(s => s.id === prev.currentSong?.id) ? 
         songs.findIndex(s => s.id === prev.currentSong?.id) : -1,
       currentSong: prev.currentSong && songs.find(s => s.id === prev.currentSong?.id) ? 
@@ -126,7 +121,6 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     
     let nextIndex: number;
     if (state.currentIndex === -1) {
-      // If no song is currently playing, start with the first song
       nextIndex = 0;
     } else {
       nextIndex = (state.currentIndex + 1) % state.playlist.length;
@@ -144,7 +138,6 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     
     let prevIndex: number;
     if (state.currentIndex === -1) {
-      // If no song is currently playing, start with the last song
       prevIndex = state.playlist.length - 1;
     } else {
       prevIndex = state.currentIndex === 0 
@@ -159,11 +152,9 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   }, [state.playlist, state.currentIndex, playSong]);
 
-  // Set up the ended event listener to auto-play next song
   useEffect(() => {
     if (audioProviderRef.current) {
       audioProviderRef.current.onEnded(() => {
-        // Auto-play next song when current song ends
         playNext();
       });
     }

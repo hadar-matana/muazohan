@@ -14,12 +14,28 @@ const AlbumDetail: React.FC<AlbumDetailProps> = ({ albumId, onSongClick, onBack 
   const { data: album, isLoading, error } = trpc.getAlbumById.useQuery({ id: albumId });
   const { setPlaylist, currentSong, isPlaying } = usePlayer();
 
-  // Set playlist when album songs are loaded
   React.useEffect(() => {
     if (album?.songs) {
       setPlaylist(album.songs);
     }
   }, [album?.songs, setPlaylist]);
+
+  // Debug logging
+  React.useEffect(() => {
+    if (album) {
+      console.log('AlbumDetail received album:', JSON.stringify(album, null, 2));
+      if (album.songs) {
+        console.log('Album songs:', album.songs.map((song: any) => ({
+          id: song.id,
+          title: song.title,
+          artistName: song.artists?.name,
+          albumName: song.albums?.name,
+          artistId: song.artist_id,
+          albumId: song.album_id
+        })));
+      }
+    }
+  }, [album]);
 
   if (isLoading) {
     return (

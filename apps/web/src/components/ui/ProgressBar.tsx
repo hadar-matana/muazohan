@@ -46,12 +46,11 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   }, []);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (isDragging) return; // Don't handle click if we're dragging
+    if (isDragging) return; 
     const newTime = calculateTimeFromPosition(event.clientX);
     onSeek(newTime);
   };
 
-  // Touch event handlers for mobile support
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
     event.preventDefault();
     setIsDragging(true);
@@ -76,7 +75,6 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
     setDragTime(null);
   }, []);
 
-  // Add/remove global event listeners
   React.useEffect(() => {
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove);

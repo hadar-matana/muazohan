@@ -5,7 +5,12 @@ export class AlbumService extends BaseService {
     try {
       return await this.prisma.albums.findMany({
         include: {
-          songs: true,
+          songs: {
+            include: {
+              artists: true,
+              albums: true
+            }
+          },
           artists: true
         }
       });
@@ -17,13 +22,55 @@ export class AlbumService extends BaseService {
 
   async getAlbumById(id: string) {
     try {
-      return await this.prisma.albums.findUnique({
+      console.log('AlbumService.getAlbumById called with id:', id);
+      
+      // First, get the album with basic song data
+      const album = await this.prisma.albums.findUnique({
         where: { id },
         include: {
           songs: true,
           artists: true
         }
       });
+      
+      if (!album) {
+        return null;
+      }
+      
+      // Then, manually fetch the songs with their relations
+      const songsWithRelations = await this.prisma.songs.findMany({
+        where: {
+          album_id: id
+        },
+        include: {
+          artists: true,
+          albums: true
+        }
+      });
+      
+      // Combine the data
+      const result = {
+        ...album,
+        songs: songsWithRelations
+      };
+      
+      console.log('AlbumService.getAlbumById result:', JSON.stringify(result, null, 2));
+      
+      if (result.songs) {
+        console.log('Songs with relations check:');
+        result.songs.forEach((song, index) => {
+          console.log(`Song ${index}:`, {
+            id: song.id,
+            title: song.title,
+            hasArtists: !!song.artists,
+            hasAlbums: !!song.albums,
+            artistName: song.artists?.name,
+            albumName: song.albums?.name
+          });
+        });
+      }
+      
+      return result;
     } catch (error) {
       console.error('Error fetching album:', error);
       throw new Error('Failed to fetch album');
@@ -46,7 +93,12 @@ export class AlbumService extends BaseService {
           image_url: data.imageUrl
         },
         include: {
-          songs: true,
+          songs: {
+            include: {
+              artists: true,
+              albums: true
+            }
+          },
           artists: true
         }
       });
@@ -73,7 +125,12 @@ export class AlbumService extends BaseService {
         where: { id },
         data: updateData,
         include: {
-          songs: true,
+          songs: {
+            include: {
+              artists: true,
+              albums: true
+            }
+          },
           artists: true
         }
       });

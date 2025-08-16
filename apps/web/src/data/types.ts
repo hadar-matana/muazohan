@@ -31,7 +31,6 @@ export interface Song {
 
 
 
-// Player state management (SRP)
 export interface PlayerState {
   currentSong: Song | null;
   playlist: Song[];
@@ -42,7 +41,6 @@ export interface PlayerState {
   volume: number;
 }
 
-// Player actions (ISP)
 export interface PlayerActions {
   playSong(song: Song): void;
   setPlaylist(songs: Song[]): void;
@@ -56,10 +54,8 @@ export interface PlayerActions {
   seekTo(time: number): void;
 }
 
-// Player context (combines state and actions)
 export interface PlayerContextType extends PlayerState, PlayerActions {}
 
-// UI Component interfaces (ISP)
 export interface PlayableItem {
   id: string;
   title: string;

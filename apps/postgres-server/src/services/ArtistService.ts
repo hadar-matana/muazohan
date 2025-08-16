@@ -5,8 +5,22 @@ export class ArtistService extends BaseService {
     try {
       return await this.prisma.artists.findMany({
         include: {
-          songs: true,
-          albums: true
+          songs: {
+            include: {
+              artists: true,
+              albums: true
+            }
+          },
+          albums: {
+            include: {
+              songs: {
+                include: {
+                  artists: true,
+                  albums: true
+                }
+              }
+            }
+          }
         }
       });
     } catch (error) {
@@ -20,8 +34,22 @@ export class ArtistService extends BaseService {
       return await this.prisma.artists.findUnique({
         where: { id },
         include: {
-          songs: true,
-          albums: true
+          songs: {
+            include: {
+              artists: true,
+              albums: true
+            }
+          },
+          albums: {
+            include: {
+              songs: {
+                include: {
+                  artists: true,
+                  albums: true
+                }
+              }
+            }
+          }
         }
       });
     } catch (error) {
@@ -39,8 +67,22 @@ export class ArtistService extends BaseService {
           image_url: data.imageUrl
         },
         include: {
-          songs: true,
-          albums: true
+          songs: {
+            include: {
+              artists: true,
+              albums: true
+            }
+          },
+          albums: {
+            include: {
+              songs: {
+                include: {
+                  artists: true,
+                  albums: true
+                }
+              }
+            }
+          }
         }
       });
     } catch (error) {
@@ -59,8 +101,22 @@ export class ArtistService extends BaseService {
         where: { id },
         data: updateData,
         include: {
-          songs: true,
-          albums: true
+          songs: {
+            include: {
+              artists: true,
+              albums: true
+            }
+          },
+          albums: {
+            include: {
+              songs: {
+                include: {
+                  artists: true,
+                  albums: true
+                }
+              }
+            }
+          }
         }
       });
     } catch (error) {

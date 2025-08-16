@@ -12,7 +12,6 @@ function AppContent() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Determine current view based on pathname
   const getCurrentView = (): ViewType => {
     if (location.pathname.startsWith('/artists')) return 'artists';
     if (location.pathname.startsWith('/albums')) return 'albums';
@@ -23,10 +22,8 @@ function AppContent() {
     navigate(`/${view}`);
   };
 
-  // Handle keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Only handle spacebar when there's a current song and not typing in an input
       if (event.code === 'Space' && currentSong) {
         const target = event.target as HTMLElement;
         const isInput = target.tagName === 'INPUT' || 

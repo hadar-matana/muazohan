@@ -8,7 +8,6 @@ interface UploadSongModalProps {
   onSuccess?: () => void;
 }
 
-// Simple button component to avoid import issues
 const Button: React.FC<{
   children: React.ReactNode;
   onClick?: () => void;
@@ -52,13 +51,11 @@ export function UploadSongModal({ isOpen, onClose, onSuccess }: UploadSongModalP
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // Validate file type
       if (!file.type.startsWith('audio/')) {
         setError('Please select an audio file');
         return;
       }
       
-      // Validate file size (50MB limit)
       if (file.size > 50 * 1024 * 1024) {
         setError('File size must be less than 50MB');
         return;
@@ -67,7 +64,6 @@ export function UploadSongModal({ isOpen, onClose, onSuccess }: UploadSongModalP
       setSelectedFile(file);
       setError('');
       
-      // Auto-fill title from filename if title is empty
       if (!title) {
         const fileName = file.name.replace(/\.[^/.]+$/, ''); // Remove extension
         setTitle(fileName);
@@ -93,7 +89,6 @@ export function UploadSongModal({ isOpen, onClose, onSuccess }: UploadSongModalP
     setError('');
     
     try {
-      // Convert file to base64
       const base64Data = await fileToBase64(selectedFile);
       
       await uploadSongMutation.mutateAsync({
@@ -104,7 +99,6 @@ export function UploadSongModal({ isOpen, onClose, onSuccess }: UploadSongModalP
         artistId: artistId || undefined,
         albumId: albumId || undefined,
       });
-      console.log('here3')
       // Reset form
       setTitle('');
       setSelectedFile(null);
@@ -123,7 +117,6 @@ export function UploadSongModal({ isOpen, onClose, onSuccess }: UploadSongModalP
     }
   };
 
-  // Helper function to convert file to base64
   const fileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -131,19 +124,16 @@ export function UploadSongModal({ isOpen, onClose, onSuccess }: UploadSongModalP
       reader.onload = () => {
         const result = reader.result;
         
-        // Validate that result is a string
         if (typeof result !== 'string') {
           reject(new Error('Failed to read file as data URL'));
           return;
         }
         
-        // Check if result contains the expected data URL format
         if (!result.includes(',')) {
           reject(new Error('Invalid data URL format'));
           return;
         }
         
-        // Remove the data URL prefix (e.g., "data:audio/mp3;base64,")
         const base64 = result.split(',')[1];
         
         if (!base64) {

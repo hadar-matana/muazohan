@@ -12,13 +12,11 @@ const formatDuration = (seconds: number): string => {
 export function SongItem({ song, index, isCurrentSong, isPlaying, onPlayPause }: SongItemProps) {
   const navigate = useNavigate();
   
-  // Check for mp3Url from the database
   const hasAudio = Boolean(song.mp3Url && song.mp3Url.trim() !== '');
   
-  // Handle both old and new schema
   const artistName = typeof song.artists === 'string' ? song.artists : song.artists?.name || 'Unknown Artist';
   const albumName = typeof song.albums === 'string' ? song.albums : song.albums?.name || 'Unknown Album';
-  const imageUrl = song.image_url || '/default-album.jpg'; // Fallback image
+  const imageUrl = song.image_url || '/default-album.jpg'; 
 
   const handleArtistClick = (e: React.MouseEvent) => {
     e.stopPropagation();
